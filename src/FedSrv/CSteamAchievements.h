@@ -32,7 +32,7 @@ enum EStats
 	PLAYER_RANK = 6,
 	PLAYER_WINS = 7,
 	PLAYER_LOSS = 8,
-	REPAIR_AMOUNT = 9
+	REPAIR_PERCENT = 9
 
 	// Don't forget to update g_nMaximumSteamStatCount and m_Stats!
 };
@@ -90,7 +90,7 @@ private:
 		"PLAYER_RANK",
 		"PLAYER_WINS",
 		"PLAYER_LOSS",
-		"REPAIR_AMOUNT"
+		"REPAIR_PERCENT"
 	};
 
 	bool GetAchievement(EAchievements achievement);
