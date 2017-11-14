@@ -1,6 +1,22 @@
 #ifndef _enginewindow_h_
 #define _enginewindow_h_
 
+#include <window.h>
+#include <ztime.h>
+
+#include "caption.h"
+#include "engine.h"
+#include "inputengine.h"
+#include "menu.h"
+
+class Context;
+class EngineApp;
+class GroupImage;
+class Surface;
+class TransformImage;
+class TranslateTransform2;
+class WrapImage;
+
 //////////////////////////////////////////////////////////////////////////////
 //
 // A window with an associated engine object
@@ -188,7 +204,7 @@ protected:
     void UpdateCursor();
     
     void UpdateInput();
-    void HandleMouseMessage(UINT message, const Point& point, UINT nFlags = NULL);
+    void HandleMouseMessage(UINT message, const Point& point, UINT nFlags = 0);
 
     void ParseCommandLine(const ZString& strCommandLine, bool& bStartFullscreen);
     void DoIdle();
@@ -257,7 +273,6 @@ public:
 
     void SetFullscreen(bool bFullscreen);
     void SetSizeable(bool bSizeable);
-    void SetWindowedSize(const WinPoint& point);
     void SetFullscreenSize(const Vector& point);
     void ChangeFullscreenSize(bool bLarger);
     void Set3DAccelerationImportant(bool b3DAccelerationImportant);

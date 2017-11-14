@@ -1,4 +1,14 @@
-#include "pch.h"
+#include "context.h"
+
+#include "camera.h"
+#include "enginep.h"
+#include "D3DDevice9.h"
+#include "material.h"
+#include "UIVertexDefn.h"
+#include "VertexGenerator.h"
+
+#include <mask.h>
+#include <matrix.h>
 
 //////////////////////////////////////////////////////////////////////////////
 //
@@ -688,9 +698,16 @@ public:
 				pDev->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
 				pDev->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
 				pDev->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
-				pDev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
+				pDev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 				pDev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 				break;
+            case BlendModeSourceAlphaPreMultiplied:
+                pDev->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
+                pDev->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
+                pDev->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
+                pDev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
+                pDev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+                break;
 			default:
 				ZError("Invalid blend mode");
 		}
@@ -706,7 +723,7 @@ public:
                         Vertex(xmax, ymax, 0, 0, 0, 1, xtmax, ytmax)
                     };
 //                    m_pdevice3D->DrawTriangles(vertices, 4, indices, 6);
-					_ASSERT( false && "TBD" );
+                    ZAssert( false && "TBD" );
                 }
                 break;
 
@@ -721,7 +738,7 @@ public:
 					if( CVBIBManager::Get()->LockDynamicVertexBuffer( phVB, 4, (void**) &pVertexData ) == false )
 					{
 						// Failed to lock the vertex buffer.
-						_ASSERT( false );
+                        ZAssert( false );
 						return;
 					}
 
@@ -958,25 +975,32 @@ public:
 		{
 		case BlendModeSource:
 			pDev->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
-			pDev->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
+			pDev->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_DIFFUSE);
 			pDev->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
 			pDev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCCOLOR);
 			pDev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCCOLOR);
 			break;
 		case BlendModeAdd:
 			pDev->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
-			pDev->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
+			pDev->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_DIFFUSE);
 			pDev->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
 			pDev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
 			pDev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
 			break;
 		case BlendModeSourceAlpha:
 			pDev->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
-			pDev->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
+			pDev->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_DIFFUSE);
 			pDev->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
-			pDev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
+			pDev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 			pDev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 			break;
+        case BlendModeSourceAlphaPreMultiplied:
+            pDev->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
+            pDev->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
+            pDev->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
+            pDev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
+            pDev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+            break;
 		default:
 			ZError("Invalid blend mode");
 		}
@@ -2361,7 +2385,7 @@ public:
         BlendMode     blendMode
     ) {
         ZAssert(
-               blendMode == BlendModeSource
+               blendMode == BlendModeSourceAlpha
             || blendMode == BlendModeAdd
         );
 
@@ -2372,7 +2396,7 @@ public:
         if (position.Z() < 0) {
             Decal& decal =
                 AddDecal(
-                      (blendMode == BlendModeSource)
+                      (blendMode == BlendModeSourceAlpha)
                     ? m_vdecalSetOpaque
                     : m_vdecalSet,
                     psurface
@@ -2479,7 +2503,7 @@ public:
         // Opaque decals
         //
 
-        SetBlendMode(BlendModeSource, false); //Imago 7/16/09 7/31/09
+        SetBlendMode(BlendModeSourceAlpha, false);
         SetZWrite(true, false);
 
         DrawVDecalSet(m_vdecalSetOpaque);

@@ -1,4 +1,9 @@
-#include "pch.h"
+#include "image.h"
+
+#include <base.h>
+
+#include "enginewindow.h"
+#include "namespace.h"
 
 //////////////////////////////////////////////////////////////////////////////
 //
@@ -123,7 +128,7 @@ TRef<Surface> ConstantImage::GetSurface()
 
 void ConstantImage::Render(Context* pcontext)
 {
-    pcontext->DrawImage(m_psurface);
+    pcontext->DrawImage3D(m_psurface, Color(1, 1, 1));
 }
 
 ZString ConstantImage::GetString(int indent)
@@ -368,7 +373,7 @@ public:
             ZString strLine = BreakLine(str, m_width - indent);
             WinPoint size   = m_pfont->GetTextExtent(strLine);
 
-            xsize  = max(xsize, size.X());
+            xsize  = std::max(xsize, size.X());
             ysize += size.Y();
             indent = m_indent;
         }
@@ -696,6 +701,7 @@ void WrapImage::SetImage(Image* pvalue)
 
 void WrapImage::CalcBounds()
 {
+    GetImage()->CalcBounds();
     m_bounds = GetImage()->GetBounds();
 }
 
