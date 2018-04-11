@@ -49,7 +49,7 @@ LARGSLOCAL=/ENTRY:mainCRTStartup \
     /delayload:netapi32.dll      \
     /delayload:advapi32.dll
 MAINTARGEXT=exe
-CARGSLOCAL=/D"FEDSRV" /D _WIN32_WINNT=0x0400 $(STANDALONEDEFS) /D AGC_HOST
+CARGSLOCAL=/D"FEDSRV" /D _WIN32_WINNT=0x0A00 $(STANDALONEDEFS) /D AGC_HOST
 INCLUDELOCAL=$(FEDSRC)\ZLib;$(FEDSRC)\_Utility;$(FEDSRC)\Igc;$(DESTDIR)\..\igc;$(FEDSRC)\inc\*.h;$(FEDROOT)\extern\vc\atl\inc;$(FEDSRC)\AGC;$(DESTDIR);$(FEDROOT)\Objs\$(FLAVOR)\AGC;$(FEDSRC)\Test\Inc;$(FEDSRC)\lobby
 PCHROOT=pch
 PCHINC=$(FEDSRC)\ZLib\*.h $(FEDSRC)\_Utility\*.h $(FEDSRC)\Igc\*.h $(FEDSRC)\inc\*.h $(FEDSRC)\Zone\*.h $(FEDSRC)\lobby\messagesAll.h $(FEDSRC)\lobby\messagesLS.h

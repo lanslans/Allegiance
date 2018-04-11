@@ -10,6 +10,11 @@
 // warning C4355: 'this' : used in base member initializer list
 #pragma warning(disable:4355)
 
+//warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+#pragma warning(disable:4244)
+
+#define _CRT_SECURE_NO_WARNINGS
+
 #ifndef DREAMCAST
     #define USEASM
     #define FLOATASM
