@@ -3675,7 +3675,7 @@ void CFSMission::QueueLobbyMissionInfo()
     }
   }
 
-  char szAddr[16]= "XXX-YYY-ZZZ-TTT"; // KGJV #114
+  char szAddr[64]= "XXX-YYY-ZZZ-TTT"; // KGJV #114
   // KGJV: added sending m_misdef.misparms.szIGCStaticFile to lobby
   BEGIN_PFM_CREATE(g.fmLobby, pfmLobbyMissionInfo, LS, LOBBYMISSIONINFO)
     FM_VAR_PARM(m_misdef.misparms.strGameName, CB_ZTS)
@@ -3683,7 +3683,7 @@ void CFSMission::QueueLobbyMissionInfo()
     FM_VAR_PARM((PCC)m_strDetailsFiles, CB_ZTS)
 	FM_VAR_PARM(m_misdef.misparms.szIGCStaticFile,CB_ZTS)
 	FM_VAR_PARM((PCC)(g.strLocalAddress),CB_ZTS) // KGJV #114 - ServerName
-	FM_VAR_PARM(szAddr,16)                       // KGJV #114 - ServerAddr - placeholder here, lobby will fill it
+	FM_VAR_PARM(szAddr,64)                       // KGJV #114 - ServerAddr - placeholder here, lobby will fill it
   END_PFM_CREATE
 
   pfmLobbyMissionInfo->dwCookie = GetCookie();

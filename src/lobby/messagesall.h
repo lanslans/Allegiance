@@ -11,7 +11,7 @@
 #ifndef _MESSAGES_ALL_ 
 #define _MESSAGES_ALL_ 
 
-#include "MessageCore.h"
+#include "messagecore.h"
 
 /*
   *************************************************
@@ -29,11 +29,15 @@ DEFINE_FEDMSG(LS, LOBBYMISSIONINFO, 301)
   FM_VAR_ITEM(szIGCStaticFile); // KGJV added
   FM_VAR_ITEM(szServerName); // KGJV #114 added
   FM_VAR_ITEM(szServerAddr); // KGJV #114 added
+  FM_VAR_ITEM(szPrivilegedUsers); // Imago 6/10 #2
+  FM_VAR_ITEM(szServerVersion); // Imago 7/10 #62
+  DWORD			dwPort;  //multi port/process servers Imago
   DWORD         dwCookie; // how the mission is identified on the lobby
   unsigned      dwStartTime;
   short         nMinRank;
   short         nMaxRank;
   unsigned      nNumPlayers                     : 11;
+  unsigned      nNumNoatPlayers                 : 11; //Imago #169
   unsigned      nMaxPlayersPerGame              : 11;
   unsigned      nMinPlayersPerTeam              : 8;
   unsigned      nMaxPlayersPerTeam              : 8;

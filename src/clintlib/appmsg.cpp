@@ -1727,6 +1727,35 @@ HRESULT BaseClient::HandleMsg(FEDMESSAGE* pfm,
             }
         }
         break;
+
+		case FM_S_ASTEROID_MINED:  //Xynth #132 7/2010
+		{
+			//if (!IsInGame())
+			//	break;
+
+			//CASTPFM(pfmAD, S, ASTEROID_MINED, pfm);
+			//IclusterIGC*    pcluster = m_pCoreIGC->GetCluster(pfmAD->clusterID);
+			//assert(pcluster);
+			//IasteroidIGC*   pasteroid = pcluster->GetAsteroid(pfmAD->asteroidID);
+			//if (pasteroid)
+			//{
+			//	pasteroid->SetOreWithFraction(pfmAD->bpOreFraction, true);  //Xynth #163 7/2010
+			//}
+		}
+		break;  //End Xynth #132
+
+		case FM_CS_HIGHLIGHT_CLUSTER:  //Xynth #208 8/2010
+		{
+			//if (!IsInGame())
+			//	break;
+
+			//CASTPFM(pfmAD, CS, HIGHLIGHT_CLUSTER, pfm);
+			//IclusterIGC*    pcluster = m_pCoreIGC->GetCluster(pfmAD->clusterID);
+			//pcluster->SetHighlight(pfmAD->highlight);
+			//if (pfmAD->highlight) PlaySoundEffect(newCommandMsgSound); //play sound on activate
+		}
+		break;
+
         case FM_S_PROBE_DESTROYED:
         {
             if (!IsInGame())
@@ -2492,6 +2521,25 @@ HRESULT BaseClient::HandleMsg(FEDMESSAGE* pfm,
             m_pClientEventSource->OnTeamNameChange(m_pMissionInfo, pfmSetTeamInfo->sideID);
             break;
         }
+
+		// #ALLY
+		case FM_S_CHANGE_ALLIANCES:
+		{
+			// update our local missioninfo, IGC sides and call the sink
+			//CASTPFM(pfmChangeAlliances, S, CHANGE_ALLIANCES, pfm);
+			//for (SideID i = 0; i < c_cSidesMax; i++)
+			//{
+			//	// missioninfo
+			//	m_pMissionInfo->SetSideAllies(i, pfmChangeAlliances->Allies[i]);
+
+			//	// IGC
+			//	IsideIGC* pside = m_pCoreIGC->GetSide(i);
+			//	if (pside)
+			//		pside->SetAllies(pfmChangeAlliances->Allies[i]);
+			//}
+			//m_pClientEventSource->OnTeamAlliancesChange(m_pMissionInfo);
+			break;
+		}
 
         case FM_S_TEAM_READY:
         {

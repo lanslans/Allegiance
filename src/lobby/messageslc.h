@@ -11,8 +11,9 @@
 #ifndef _MESSAGES_LC_H_ 
 #define _MESSAGES_LC_H_ 
 
-#include "MessageCore.h"
-#define LOBBYVER 10 // KGJV updated for R4
+#include "messagecore.h"
+#include "int_types.h"
+#define LOBBYVER 12 //Imago updated for R5 8/6/09 /- #2 6/10
 
  /*
   *************************************************
@@ -73,7 +74,7 @@ END_FEDMSG
 
 DEFINE_FEDMSG(L, JOIN_MISSION, 260)
   DWORD dwCookie; // client should ignore this message unless it's the cookie for the most recent join/create request 
-  char szServer[16];
+  char szServer[64];
   DWORD dwPort;			// mdvalley: pass the port to the client
   GUID guidInstance;
 END_FEDMSG    
@@ -109,13 +110,16 @@ DEFINE_FEDMSG(C, LOGON_LOBBY, 265) // if the lobby is in club mode, everyone has
   int   crcFileList; 
   DWORD dwTime;
   char  szName[c_cbName];
+  int8_t	steamAuthTicket[1024];	// BT - STEAM
+  uint32_t	steamAuthTicketLength;	// BT - STEAM
+  uint64_t	steamID;				// BT - STEAM
 END_FEDMSG
 
 // KGJV #114
 struct ServerCoreInfo
 {
 	char szName[c_cbName];
-	char szRemoteAddress[16];
+	char szRemoteAddress[64];
 	char szLocation[c_cbFileName]; //it's not a filename but we want it short- keep in sync with CFLServer::m_szLocation
 	int  iCurGames;
 	int  iMaxGames;

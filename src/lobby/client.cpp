@@ -416,7 +416,7 @@ HRESULT LobbyClientSite::OnAppMessage(FedMessaging * pthis, CFMConnection & cnxn
 
             case ZT_E_AUTH_INVALID_TICKET:
             {
-              char szRemoteAddress[16];
+              char szRemoteAddress[64];
               HRESULT hr = pthis->GetIPAddress(cnxnFrom, szRemoteAddress);
               g_pLobbyApp->GetSite()->LogEvent(EVENTLOG_WARNING_TYPE, LE_BadZTicket, 
                   SUCCEEDED(hr) ? szRemoteAddress : "unknown");
@@ -430,7 +430,7 @@ HRESULT LobbyClientSite::OnAppMessage(FedMessaging * pthis, CFMConnection & cnxn
         }
         else
         {
-          char szRemoteAddress[16];
+          char szRemoteAddress[64];
           HRESULT hr = pthis->GetIPAddress(cnxnFrom, szRemoteAddress);
           g_pLobbyApp->GetSite()->LogEvent(EVENTLOG_WARNING_TYPE, LE_NoCredentials,
                 SUCCEEDED(hr) ? szRemoteAddress : "unknown");
@@ -445,7 +445,7 @@ HRESULT LobbyClientSite::OnAppMessage(FedMessaging * pthis, CFMConnection & cnxn
        if (fValid) // wlp 2006 - added token verification code
 	   {
 	    // wlp grab  the requester IP 
-        char szPlayerIP[16];
+        char szPlayerIP[64];
         HRESULT hr = pthis->GetIPAddress(cnxnFrom,szPlayerIP);
         // grab the ASGS Ticket from the variable field
         char * szASGS = (char*) FM_VAR_REF(pfmLogon, ASGS_Ticket);
@@ -607,7 +607,7 @@ HRESULT LobbyClientSite::OnAppMessage(FedMessaging * pthis, CFMConnection & cnxn
 		{
 			if (!pServerT->GetPaused()) // not paused
 			{
-				char szRemoteAddress[16];
+				char szRemoteAddress[64];
 				g_pLobbyApp->GetFMServers().GetIPAddress(*iterCnxn.Value(), szRemoteAddress);
 				if (strcmp(szRemoteAddress,szAddr)==0) // IPs match
 				{
@@ -674,7 +674,7 @@ HRESULT LobbyClientSite::OnAppMessage(FedMessaging * pthis, CFMConnection & cnxn
       {
         BEGIN_PFM_CREATE(*pthis, pfmJoinMission, L, JOIN_MISSION)
         END_PFM_CREATE
-        char szServer[16];
+        char szServer[64];
         g_pLobbyApp->GetFMServers().GetIPAddress(*pMission->GetServer()->GetConnection(), szServer);
         assert(lstrlen(szServer) < sizeof(pfmJoinMission->szServer)); // as long as szServer is fixed length
         lstrcpy(pfmJoinMission->szServer, szServer);

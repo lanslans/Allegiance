@@ -94,7 +94,7 @@ public:
       char szParams[_MAX_PATH] = "";
       for (int i = 0; i < cParams; ++i)
       {
-        char szParam[16];
+        char szParam[64];
         sprintf(szParam, "%08X ", rgParams[i]);
         strcat(szParams, szParam);
       }

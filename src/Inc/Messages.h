@@ -13,15 +13,8 @@
 
 #include "MessageCore.h"
 
-/* this gets incremented for any change to the file. On client startup, we 
-   make sure the client version is equal to the server version. Of course,
-   at a later date, if we decide to allow the server to support out of date 
-   clients, we can leave in the old structure of message(s) and the server can
-   use whichever, depending on the version of client connected. Since we have
-   one server, and many clients, the server is always up to date by definition.
-   ***Also gets incremented for changes to parts.h***
-*/
-const int MSGVER = 199; // KGJV updated for R4
+// KGJV - MSGVER has its own include file now
+#include "MessageVersion.h"
  
 
 /*
@@ -47,6 +40,10 @@ DEFINE_FEDMSG(C, LOGONREQ, 1)   // First message the client sends to the server.
   Time      time;
   DWORD     dwCookie;
   int       crcFileList; 
+  char		steamAuthTicket[1024]; // BT - STEAM
+  int		steamAuthTicketLength; // BT - STEAM
+  DWORD		steamID; // BT - STEAM
+  char		drmHash[50]; // BT - STEAM
 END_FEDMSG
 
 DEFINE_FEDMSG(S, LOGONACK, 2) // sent when the server recives FM_C_LOGONREQ
@@ -228,7 +225,8 @@ DEFINE_FEDMSG(C, SHIP_UPDATE, 24)
 END_FEDMSG
 
 // ***PARTS***
-#include "parts.h"
+// KG- obsolete
+//#include "parts.h"
 
 // All part definition messages must start with Part, and have a single struct (in parts.h) after that
 // In order to be able to just copy structs without allocating them, all parts are two structs only.
@@ -297,7 +295,7 @@ DEFINE_FEDMSG(S, MISSIONDEF, 38) // sent when a mission is created, and when it 
   STAGE     stage;
   // KGJV #114 - added server name & addr
   char      szServerName[c_cbName];
-  char      szServerAddr[16];
+  char      szServerAddr[64];
   // yes, for missions with fewer than c_cSidesMax sides, the following arrays will waste space,
   // but that allows us to just keep an array of missions
   // $CRC: should probably just make a struct for the per team stuff and have an array of the struct
@@ -310,6 +308,7 @@ DEFINE_FEDMSG(S, MISSIONDEF, 38) // sent when a mission is created, and when it 
   char      rgfReady        [c_cSidesMax];
   char      rgfForceReady   [c_cSidesMax];
   char      rgfActive       [c_cSidesMax];
+  char		rgfAllies		[c_cSidesMax]; // #ALLY - ally group - NA is no allies
 END_FEDMSG
 
 DEFINE_FEDMSG(C, POSITIONREQ, 39) // client requests position on a side.
@@ -401,6 +400,7 @@ END_FEDMSG
 DEFINE_FEDMSG(CS, CHANGE_TEAM_CIV, 51) // sent by team leader to change the civ of the side, and forwarded to everybody
   SideID    iSide;
   CivID     civID;
+  bool		random;  //Xynth #170 8/2010 add random factions
 END_FEDMSG
 
 DEFINE_FEDMSG(CS, AUTO_ACCEPT, 52) // sent by team leader, forwarded to all
@@ -796,7 +796,8 @@ enum QuitSideReason
     QSR_SwitchingSides,
     QSR_RandomizeSides,
 	QSR_FlushSides,		// TE: Add this for balance patch
-	QSR_BalanceSides	// TE: Add this for balance patch
+	QSR_BalanceSides,	// TE: Add this for balance patch
+	QSR_BannedBySteam // BT - STEAM
 };
 
 #define QSRIsBoot(reason) ((reason) >= QSR_LeaderBooted && (reason) <= QSR_AdminBooted)
@@ -987,6 +988,13 @@ DEFINE_FEDMSG(S, RELAUNCH_SHIP, 192)
     Cookie              cookie;
 END_FEDMSG
 
+/* pkk May 6th: Disabled bandwidth patch
+// w0dk4 June 2007: Bandwith Patch
+DEFINE_FEDMSG(C, BANDWIDTH, 193)
+  unsigned int          value;     
+END_FEDMSG*/
+
+
 // w0dk4 player-pings feature
 DEFINE_FEDMSG(S, PINGDATA, 194)
   ShipID              shipID;
@@ -998,8 +1006,30 @@ DEFINE_FEDMSG(C, REQPINGDATA, 195)
 END_FEDMSG
 // end w0dk4
 
+// #ALLY
+DEFINE_FEDMSG(C, CHANGE_ALLIANCE, 196) // sent by game owner when changing alliances
+  SideID    sideID;
+  SideID    sideAlly; // side to ally to or NA to clear all alliances
+END_FEDMSG
+
+DEFINE_FEDMSG(S, CHANGE_ALLIANCES, 197) // sent by server when alliances change
+  char      Allies[c_cSidesMax];
+END_FEDMSG
+// end #ALLY
+
+DEFINE_FEDMSG(S, ASTEROID_MINED, 198)  //Xynth #132 7/2010 sent by server when an He3 rock is mined
+    SectorID            clusterID;
+    AsteroidID          asteroidID;
+	BytePercentage      bpOreFraction;	
+END_FEDMSG
+
+DEFINE_FEDMSG(CS, HIGHLIGHT_CLUSTER, 199)  //Xynth #208 Notify clients of sector highlight
+    SectorID            clusterID;	
+	bool				highlight;	
+END_FEDMSG
 
 #endif // _MESSAGES_ 
+
 
 
 

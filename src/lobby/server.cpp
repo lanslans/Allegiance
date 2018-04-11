@@ -107,7 +107,7 @@ HRESULT LobbyServerSite::OnAppMessage(FedMessaging * pthis, CFMConnection & cnxn
 		// break; mmf took out break so we can check ip below
 		// KGJV moved mmf's stuff inside lobby version check
 		// mmf add check to see if they are an allowed or blocked server
-		  char szRemote[16];
+		  char szRemote[64];
 		  pthis->GetIPAddress(cnxnFrom, szRemote);
 
 		  if (!strncmp("127.0.0.1",szRemote,9)) break;  // check for loopback and always allow
@@ -151,7 +151,7 @@ HRESULT LobbyServerSite::OnAppMessage(FedMessaging * pthis, CFMConnection & cnxn
     {
       CASTPFM(pfmLobbyMissionInfo, LS, LOBBYMISSIONINFO, pfm);
 	  //KGJV #114 - server didnt fill szServerAddr but only reserved the bits. We fill it here.
-	  char szAddr[16];
+	  char szAddr[64];
       pthis->GetIPAddress(cnxnFrom, szAddr); // get the real addr
 	  char *pfmdata = FM_VAR_REF(pfmLobbyMissionInfo, szServerAddr); // get the addr in the message
 	  strcpy(pfmdata,szAddr); // overwrite with the real addr
@@ -258,7 +258,7 @@ void    LobbyServerSite::OnMessageNAK(FedMessaging * pthis, DWORD dwTime, CFMRec
 
 HRESULT LobbyServerSite::OnNewConnection(FedMessaging * pthis, CFMConnection & cnxn) 
 {
-  char szRemote[16];
+  char szRemote[64];
   pthis->GetIPAddress(cnxn, szRemote);
   CFLServer * pServer = new CFLServer(&cnxn);
   g_pLobbyApp->GetSite()->LogEvent(EVENTLOG_INFORMATION_TYPE, LE_ServerConnected, cnxn.GetName(), szRemote);

@@ -3514,9 +3514,9 @@ HRESULT WinTrekClient::OnAppMessage(FedMessaging * pthis, CFMConnection & cnxnFr
 		if (pfm->fmid == FM_S_MISSIONDEF)
 		{
 			CASTPFM(pfmMissionDef, S, MISSIONDEF, pfm);
-			char szAddr[16];
+			char szAddr[64];
 			pthis->GetIPAddress(cnxnFrom, szAddr); // get the real addr
-			strcpy_s(pfmMissionDef->szServerAddr,16,szAddr);
+			strcpy_s(pfmMissionDef->szServerAddr,64,szAddr);
 		}
 		// KGJV: end
 
