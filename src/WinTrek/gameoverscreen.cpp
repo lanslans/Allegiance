@@ -683,7 +683,8 @@ public:
             m_plistStats->PushEnd(trekClient.GetEndgamePlayerInfo(iPlayerIndex));
         }
         
-        if (!trekClient.GetGameCounted() || !trekClient.GetScoresCounted())
+        // BT - STEAM - Scores always count.
+        /*if (!trekClient.GetGameCounted() || !trekClient.GetScoresCounted())
         {
             if (trekClient.GetWonLastGame())
                 m_ptextGameCounted->SetString("Win not counted");
@@ -692,7 +693,7 @@ public:
             else
                 m_ptextGameCounted->SetString("");
         }
-        else
+        else*/
             m_ptextGameCounted->SetString("");
 
         RefreshPlayers();

@@ -33,6 +33,8 @@
 #include <urlmon.h>
 #endif
 
+// BT - STEAM
+#include "steam_gameserver.h"
 //
 // Wintrek headers
 //

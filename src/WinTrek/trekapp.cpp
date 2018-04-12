@@ -2,6 +2,11 @@
 #include <objbase.h>
 #include <malloc.h>
 
+// BT - STEAM
+#ifdef STEAM_APP_ID
+# include "atlenc.h"
+# include <inttypes.h>
+#endif
 //////////////////////////////////////////////////////////////////////////////
 //
 // Include the main function
@@ -267,10 +272,91 @@ public:
         AddRef();
     }
 
+	// BT - STEAM
+	ZString CleanUpSteamName(ZString &personaName)
+	{
+		char tempBuffer[25];
+		Strncpy(tempBuffer, personaName, 24);
+
+		tempBuffer[24] = '\0';
+
+		int underscoreCount = 0;
+
+		for (int i = 0; i < strlen(tempBuffer); i++)
+		{
+			//  if the character is not within an allowed range, then replace it out. 
+			if (!(tempBuffer[i] == '_'
+				|| (tempBuffer[i] >= '0' && tempBuffer[i] <= '9')
+				|| (tempBuffer[i] >= 'A' && tempBuffer[i] <= 'Z')
+				|| (tempBuffer[i] >= 'a' && tempBuffer[i] <= 'z'))
+				)
+			{
+				switch (tempBuffer[i])
+				{
+					/*case ' ':
+					tempBuffer[i] = '_';
+					break;
+					case '!':
+					tempBuffer[i] = 'l';
+					break;
+
+					case '@':
+					tempBuffer[i] = 'a';
+					break;
+
+					case '#':
+					tempBuffer[i] = 'H';
+					break;
+
+					case '$':
+					tempBuffer[i] = 'S';
+					break;
+
+					case '%':
+					tempBuffer[i] = 'X';
+					break;
+
+					case '&':
+					tempBuffer[i] = 'n';
+					break;*/
+
+				default:
+					tempBuffer[i] = '_';
+					underscoreCount++;
+					break;
+				}
+			}
+		}
+
+		// Prevent an all _ character name. (Thanks Door!) 
+		if (underscoreCount == strlen(tempBuffer))
+			strcpy(tempBuffer, "");
+
+		return ZString(tempBuffer);
+	}
+
     HRESULT Initialize(const ZString& strCommandLine)
     {
         _controlfp(_PC_53, _MCW_PC);
 
+#ifdef STEAM_APP_ID
+		// BT - STEAM
+#ifndef _DEBUG
+		if (IsDebuggerPresent() == false)
+		{
+			if (SteamAPI_RestartAppIfNecessary(STEAM_APP_ID) == true)
+				::exit(-1);
+		}
+#endif
+
+		bool steamInitResult = SteamAPI_Init();
+		if (steamInitResult == false)
+		{
+			// If you are debugging locally, then you need to put steam_appid.txt with 700480 in it next to the Allegaince EXE that you are debugging.
+			::MessageBoxA(NULL, "Steam Client is not running. Please launch Steam and try again.", "Error", MB_ICONERROR | MB_OK);
+			::exit(-1);
+		}
+#endif
         //
         // Make sure reloader finished correctly--this must be first before any other files are opened
         //
@@ -599,8 +685,8 @@ public:
                 // wlp 2006 - added debug option to turn on debug output
 				} else if (str == "debug") {
                     g_outputdebugstring  = true;           //wlp allow debug outputs
-  				} else if (str.Left(10) == "authtoken=") { // wlp - 2006, added new ASGS tickettoken
-                    trekClient.SetCDKey(str.RightOf(10)) ; // Use CdKey for ASGS storage
+  				//} else if (str.Left(10) == "authtoken=") { // wlp - 2006, added new ASGS tickettoken
+      //              trekClient.SetCDKey(str.RightOf(10)) ; // Use CdKey for ASGS storage
                 } else if (str.Left(9) == "callsign=") { // wlp - 2006, added new ASGS token
                     trekClient.SaveCharacterName(str.RightOf(9)) ; // Use CdKey for ASGS callsign storage
                     g_bAskForCallSign = false ; // wlp callsign was entered on commandline
@@ -610,6 +696,29 @@ public:
             if (token.IsString(str)){} ;
             }
 
+		debugf("Logging into steam.\n");
+
+		// BT - STEAM
+		if (SteamUser() != nullptr && SteamUser()->BLoggedOn() == true)
+		{
+			ZString personaName = SteamFriends()->GetPersonaName();
+
+			debugf("Steam Persona Name: " + personaName + "\n");
+
+			personaName = CleanUpSteamName(personaName);
+
+			debugf("Cleaned Persona Name: " + personaName + "\n");
+
+			trekClient.SaveCharacterName(personaName);
+
+			debugf("trekClient - Saved persona name as character name.\n");
+
+			char steamID[64];
+			sprintf(steamID, "%" PRIu64, SteamUser()->GetSteamID().ConvertToUint64());
+			trekClient.SetCDKey(steamID);
+		}
+
+		debugf("Steam login complete.\n");
         // 
         // Check for other running copies of the app
         //

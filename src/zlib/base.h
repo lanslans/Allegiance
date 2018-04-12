@@ -81,6 +81,10 @@ public:
     {
         return Write(&value, sizeof(Type));
     }
+
+	// BT - STEAM
+	ZString GetSha1Hash();
+	static FILETIME GetMostRecentFileModificationTime(ZString &searchPath);
 };
 
 class ZWriteFile : public ZFile {

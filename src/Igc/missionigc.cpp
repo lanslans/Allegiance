@@ -55,6 +55,7 @@
 #include    "droneTypeIGC.h"
 #include    "bucketigc.h"
 #include    "mapmakerigc.h"
+include    "AllegianceSecurity.h"								  
 static void DoDecrypt(int size, char* pdata)
 {
     DWORD encrypt = 0;
@@ -402,6 +403,22 @@ int     LoadIGCStaticCore (const char* name, ImissionIGC* pMission, bool fGetVer
         }
 
         fclose (file);
+		// BT - STEAM - Ensure that the ICG Core files are not tampered with.
+		// Have to let the static core info above load, even if it's no good or the client crashes out becuase it can't find a civ.
+#ifdef STEAMSECURE
+		if (fGetVersionOnly == true)
+		{
+			FileHashTable fileHashTable;
+			if (fileHashTable.DoesFileHaveHash(szFilename) == true)
+			{
+				TRef<ZFile> coreFile = new ZFile(szFilename);
+				if (fileHashTable.IsHashCorrect(szFilename, coreFile) == false)
+				{
+					iStaticCoreVersion = 0;
+				}
+			}
+		}
+#endif
         return iStaticCoreVersion;
     }
     else
@@ -1780,7 +1797,7 @@ void                    CmissionIGC::GenerateMission(Time                   now,
 	debugf("Total money: %f\n",pmp->fHe3Density);
 	debugf("Player Sector He3 rocks: %d\n",pmp->nPlayerSectorMineableAsteroids);
 	debugf("Neutral Sector He3 rocks: %d\n",pmp->nNeutralSectorMineableAsteroids);
-	debugf("Max Miners: %d\n",pmp->nMaxMinersPerTeam);
+	debugf("Max Miners: %d\n",pmp->nMaxDronesPerTeam);
     debugf("Scores Count: %s\n",pmp->bScoresCount ? "yes" : "no");
     debugf("Eject Pods: %s\n",pmp->bEjectPods ? "yes" : "no");
     debugf("Allow Friendly Fire: %s\n",pmp->bAllowFriendlyFire ? "yes" : "no");

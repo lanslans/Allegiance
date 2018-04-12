@@ -1,6 +1,10 @@
 #ifndef _CLINTLIB_
 #define _CLINTLIB_
 
+#include <Messages.h>
+#include <messageslc.h>
+#include <mission.h>
+#include "..\Lib\steam\steam_api.h"
 class MissionInfo;
 class SideInfo;
 class PlayerInfo;
@@ -697,6 +701,9 @@ private:
 
     BallotList              m_listBallots;
 
+	// BT - STEAM
+	HAuthTicket				m_hAuthTicketLobby = 0;
+	HAuthTicket				m_hAuthTicketServer = 0;
 public: //todo: make protected
 
     // messaging
@@ -724,6 +731,8 @@ public: //todo: make protected
       LPBYTE    pZoneTicket;
       CB        cbZoneTicket;
       GUID      guidSession;
+	  int8		steamAuthTicket[1024]; // BT - STEAM
+	  int32		steamAuthTicketLength; // BT - STEAM
     };
     
     bool                m_fLoggedOn   : 1;
@@ -860,6 +869,11 @@ public:
     }
     virtual void        SetCDKey(const ZString& strCDKey);
 
+	// BT - STEAM
+	void UpdateLobbyLoginRequestWithSteamAuthTokenInformation(FMD_C_LOGON_LOBBY *pfmLogon);
+	void UpdateServerLoginRequestWithSteamAuthTokenInformation(FMD_C_LOGONREQ *pfmLogon);
+	void CancelSteamAuthSessionToGameServer();
+	void CancelSteamAuthSessionToLobby();
     virtual void        OnLogonAck(bool fValidated, bool bRetry, LPCSTR szFailureReason) = 0;
     virtual void        OnLogonLobbyAck(bool fValidated, bool bRetry, LPCSTR szFailureReason) = 0;
     virtual void        OnLogonClubAck(bool fValidated, bool bRetry, LPCSTR szFailureReason) {};

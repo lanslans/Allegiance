@@ -1,4 +1,6 @@
 #include "pch.h"
+#include "AllegianceSecurity.h"
+#include "steam_api.h"
 
 //////////////////////////////////////////////////////////////////////////////
 //
@@ -2217,6 +2219,8 @@ private:
     TRef<ModelerSite> m_psite;
     PathString        m_pathStr;
 
+	// BT - STEAM
+	FileHashTable			m_fileHashTable;
     TMap<ZString, TRef<INameSpace> > m_mapNameSpace;
 
 public:
@@ -2511,6 +2515,35 @@ public:
 				ZDebugOutput("Could not open the artwork file "+ strToOpen + "\n");
 				// this may fail/crash if strToOpen is fubar, but we are about to ZRAssert anyway
 			}
+			else
+			{
+#ifdef STEAMSECURE
+
+				// BT - STEAM - Do the security checksum  on the loaded file here. Steam DRM wrapper will ensure that the Allegiance exe is not
+				// tampered with, so basic checksums are all that is required.
+				if (m_fileHashTable.IsHashCorrect(strToOpen, pfile) == false)
+				{
+					// Cause the calls downward to fail out.
+					pfile = new ZFile("failsauce.nope");
+				}
+#endif
+			}
+		}
+
+
+		//Imago 11/09/09 - Provide a helpful message box for this common error
+		if (bError && !pfile->IsValid() && m_psite) {
+			PostMessageA(GetActiveWindow(), WM_SYSCOMMAND, SC_MINIMIZE, 0);
+
+#ifdef STEAMSECURE
+			// BT - STEAM - Queue up a full content re-verify in case the user has a corrupted file.
+			if (SteamUser() != nullptr && SteamUser()->BLoggedOn() == true)
+				SteamApps()->MarkContentCorrupt(false);
+#endif 
+
+			// BT - STEAM
+			MessageBoxA(GetDesktopWindow(), "Artwork file failed to validate: " + strToOpen + ", we have queued up an installation reverification. Check your Steam App in the downloads section for details..", "Allegiance: Fatal modeler error", MB_ICONERROR);
+			exit(0);
 		}
 
 		ZRetailAssert(!(bError && !pfile->IsValid() && m_psite));

@@ -1261,6 +1261,12 @@ HRESULT BaseClient::ConnectToServer(ConnectInfo & ci, DWORD dwCookie, Time now, 
     if (m_strCDKey.IsEmpty())
         m_strCDKey = ZString(ci.szName).ToUpper();
 
+	char szCdKey[2064];
+	strcpy(szCdKey, (PCC)m_strCDKey);
+
+	// BT - STEAM
+	char szDrmHash[256];
+
     if (m_fm.IsConnected())
     {
         ZSucceeded(hr);
@@ -1269,15 +1275,18 @@ HRESULT BaseClient::ConnectToServer(ConnectInfo & ci, DWORD dwCookie, Time now, 
         BEGIN_PFM_CREATE(m_fm, pfmLogon, C, LOGONREQ)
             FM_VAR_PARM(ci.szName, CB_ZTS)
             FM_VAR_PARM(ci.pZoneTicket, ci.cbZoneTicket)
-        // wlp 2006 - this is the ASGS Ticket
-        //     FM_VAR_PARM((PCC)m_strCDKey, CB_ZTS)            
-             FM_VAR_PARM("FERAL-1234567890123456", CB_ZTS)            // wlp 2006 - Don't send ASGS token to game server
+			FM_VAR_PARM(szCdKey, CB_ZTS) // BT - 9/11/2010 - Sending the token to the server so that the server will also enforce authentication. 
             FM_VAR_PARM(szPassword, CB_ZTS)
+			FM_VAR_PARM(szDrmHash, CB_ZTS) // BT - STEAM
         END_PFM_CREATE
         pfmLogon->fedsrvVer = MSGVER;
         pfmLogon->dwCookie = dwCookie;
         //pfmLogon->zgs = m_fm.GetEncryptedZoneTicket();
         pfmLogon->time = Time::Now ();
+
+		// BT - STEAM
+		UpdateServerLoginRequestWithSteamAuthTokenInformation(pfmLogon);
+
         debugf("Logging on to game server \"%s\"...\n",
           ci.strServer.IsEmpty() ? "" : (LPCSTR)ci.strServer);
         SendMessages();
@@ -1356,6 +1365,9 @@ HRESULT BaseClient::ConnectToLobby(ConnectInfo * pci) // pci is NULL if reloggin
         pfmLogon->dwTime = dwTime;
         lstrcpy(pfmLogon->szName, m_ci.szName);
 
+		// BT - STEAM
+		UpdateLobbyLoginRequestWithSteamAuthTokenInformation(pfmLogon);
+
         // do art update--see ConnectToServer
         debugf("Logging on to lobby \"%s\"...\n",
           m_ci.strServer.IsEmpty() ? "" : (LPCSTR)m_ci.strServer);
@@ -1367,6 +1379,61 @@ HRESULT BaseClient::ConnectToLobby(ConnectInfo * pci) // pci is NULL if reloggin
     m_serverOffsetValidF = false;
     return hr;
 }
+
+
+// BT - STEAM
+void BaseClient::UpdateLobbyLoginRequestWithSteamAuthTokenInformation(FMD_C_LOGON_LOBBY *pfmLogon)
+{
+	if (SteamUser() != nullptr)
+	{
+		CancelSteamAuthSessionToLobby();
+
+		m_hAuthTicketLobby = SteamUser()->GetAuthSessionTicket(pfmLogon->steamAuthTicket, sizeof(pfmLogon->steamAuthTicket), &pfmLogon->steamAuthTicketLength);
+
+		pfmLogon->steamID = SteamUser()->GetSteamID().ConvertToUint64();
+	}
+}
+
+// BT - STEAM
+void BaseClient::UpdateServerLoginRequestWithSteamAuthTokenInformation(FMD_C_LOGONREQ *pfmLogon)
+{
+	if (SteamUser() != nullptr)
+	{
+		CancelSteamAuthSessionToGameServer();
+
+		m_hAuthTicketServer = SteamUser()->GetAuthSessionTicket(pfmLogon->steamAuthTicket, sizeof(pfmLogon->steamAuthTicket), &pfmLogon->steamAuthTicketLength);
+
+		pfmLogon->steamID = SteamUser()->GetSteamID().ConvertToUint64();
+
+		int authTicketCRC = MemoryCRC(pfmLogon->steamAuthTicket, pfmLogon->steamAuthTicketLength);
+
+		DrmChecker drmChecker;
+		drmChecker.GetDrmWrapChecksum(authTicketCRC, pfmLogon->drmHash, sizeof(pfmLogon->drmHash)); // Note, this is always empty, unless it's an official retail steam build!
+
+
+	}
+}
+
+// BT - STEAM
+void BaseClient::CancelSteamAuthSessionToGameServer()
+{
+	if (m_hAuthTicketServer != 0)
+	{
+		SteamUser()->CancelAuthTicket(m_hAuthTicketServer);
+		m_hAuthTicketServer = 0;
+	}
+}
+
+// BT - STEAM
+void BaseClient::CancelSteamAuthSessionToLobby()
+{
+	if (m_hAuthTicketLobby != 0)
+	{
+		SteamUser()->CancelAuthTicket(m_hAuthTicketLobby);
+		m_hAuthTicketLobby = 0;
+	}
+}
+
 
 
 HRESULT BaseClient::ConnectToClub(ConnectInfo * pci) // pci is NULL if relogging in
@@ -1490,6 +1557,10 @@ void BaseClient::Disconnect(void)
         m_fm.Shutdown();
         m_fLoggedOn = false;
     }
+
+	// BT - STEAM 
+	CancelSteamAuthSessionToGameServer();
+
     m_szCharName[0] = '\0';
     m_szIGCStaticFile[0] = '\0';
 }
@@ -3555,6 +3626,10 @@ void BaseClient::OnQuitSide()
 
 void BaseClient::OnJoinSide()
 {
+	// BT - STEAM
+	// WHen joining a server, the player leaves the lobby, so cancel their lobby auth ticket, and transition to the server auth ticket.
+	CancelSteamAuthSessionToLobby();
+
     ResetShip();
     m_strBriefingText.SetEmpty();
     m_bGenerateCivBriefing = false;
@@ -3578,6 +3653,10 @@ void BaseClient::OnJoinSide()
 void BaseClient::OnQuitMission(QuitSideReason reason, const char* szMessageParam)
 {
     Disconnect();
+	
+	// BT - STEAM
+	CancelSteamAuthSessionToGameServer();
+
     // clear chat messages
     m_chatList.purge(true);
     m_pClientEventSource->OnClearChat();
@@ -3746,6 +3825,7 @@ void BaseClient::RemovePlayerFromSide(PlayerInfo* pPlayerInfo, QuitSideReason re
 
                 case QSR_DuplicateLocalLogon:
                 case QSR_DuplicateCDKey:
+				case QSR_BannedBySteam:  // BT - STEAM										  
                     // don't send a chat in case they were dropped.
                     //msg = pPlayerInfo->CharacterName() + ZString(" has been booted due to a duplicate logon.");
                     //ReceiveChat(NULL, CHAT_TEAM, NA, salQuitSound, msg, c_cidNone, NA, NA);
@@ -3921,6 +4001,9 @@ void BaseClient::AddPlayerToSide(PlayerInfo* pPlayerInfo, SideID sideID)
 
             ReceiveChat(NULL, CHAT_TEAM, NA, salEnemyJoinersSound, msg, c_cidNone, NA, NA);
         }
+
+
+		m_pPlayerInfo = pPlayerInfo;
     }
 }
 

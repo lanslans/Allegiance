@@ -1047,6 +1047,8 @@ struct MissionParams
     bool        bShowMap            : 1;                //Show all warps at the start of the game
     bool        bAllowPrivateTeams  : 1;
     bool        bAllowEmptyTeams    : 1;                //Allow teams without players
+	bool		bAllowAlliedRip		: 1;				//Imago 7/8/09 ALLY					  
+	bool		bAllowAlliedViz		: 1;				//Imago 7/11/09 ALLY			   
     bool        bAllowDevelopments  : 1;                //Allow investment in tech
     bool        bAllowShipyardPath  : 1;                //Allow building Shipyards
     bool        bAllowTacticalPath  : 1;                //Allow building Tactical Labs  
@@ -1133,7 +1135,7 @@ struct MissionParams
     unsigned char nMaxPlayersPerTeam;                   //Max players on team
 
     char        nInitialMinersPerTeam;                  //Number of miners to start the game with
-    char        nMaxMinersPerTeam;                      //Maximum # of miners a team is allowed to control
+    char        nMaxDronesPerTeam;                      //Maximum # of drones a team is allowed to control
 
     short       nTotalMaxPlayersPerGame;                //Maximum # of players per game (mostly used for StandAlone server)
 
@@ -1160,6 +1162,8 @@ struct MissionParams
         bInvulnerableStations           = false;
         bAllowPrivateTeams              = true ;
         bAllowEmptyTeams                = false;
+		bAllowAlliedRip					= false; //imago 7/8/09 ALLY				  
+		bAllowAlliedViz					= false; //imago 7/8/09 ALLY 7/17/09 done testing, defaults off unless allies																   
         bShowMap                        = false;
         bAllowDevelopments              = true ;
         bAllowShipyardPath              = true ;
@@ -1173,7 +1177,7 @@ struct MissionParams
         bLockTeamSettings               = false;
         bAllowDefections                = false;
         bStations                       = true ;
-        bScoresCount                    = false;
+        bScoresCount                    = true;
         bSquadGame                      = false;
         bDrones                         = true ;
         iResources                      = 0;
@@ -1277,13 +1281,13 @@ struct MissionParams
             }
         }
 
-        if (nInitialMinersPerTeam > nMaxMinersPerTeam)
+        if (nInitialMinersPerTeam > nMaxDronesPerTeam)
         {
             return "Initial miners per team must be less than max miners per team.";
         }
-        else if (nMaxMinersPerTeam > 10)
+        else if (nMaxDronesPerTeam > 10)
         {
-            return "Max miners per team must be less than or equal to 10.";
+            return "Max drones per team must be less than or equal to 10.";
         }
         else if (nNeutralSectorSpecialAsteroids > 9)
         {
@@ -1382,17 +1386,19 @@ struct MissionParams
         {
             return "Minimum number of players must not be greater than the maximum number of players.";
         }
-        else if (bScoresCount && bAllowDefections)
-        {
-            return "Scores can't be counted for a game where defections are allowed; "
-                "please turn off defections or stats count.";
-        }
+		// BT - STEAM - Removing the limitation on defections and imbal for Steam stats. Steam 
+		// doesn't care how many teams you show up on. It's your play time that counts!																				 
+        //else if (bScoresCount && bAllowDefections)
+        //{
+        //    return "Scores can't be counted for a game where defections are allowed; "
+        //        "please turn off defections or stats count.";
+        //}
 		// TE: Confirms that the MaxImbalance = AUTO when scores count
-        else if (bScoresCount && iMaxImbalance != 0x7ffe)
-        {
-            return "Scores can't be counted for a game where the MaxImbalance setting is not Auto; "
-                "please set the MaxImbalance setting to Auto, or turn off stats count.";
-        }
+        //else if (bScoresCount && iMaxImbalance != 0x7ffe)
+        //{
+        //    return "Scores can't be counted for a game where the MaxImbalance setting is not Auto; "
+        //        "please set the MaxImbalance setting to Auto, or turn off stats count.";
+        //}
         else if (IsConquestGame() && bInvulnerableStations)
         {
             return "You can't play a conquest game with invulnerable stations; "

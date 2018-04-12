@@ -11,6 +11,8 @@
 #include "slideshow.h"
 #include "Training.h"
 #include "CommandAcknowledgedCondition.h"
+#include "CallsignTagInfo.h"
+#include "SteamClans.h" // BT - STEAM
 
 #include <Delayimp.h>   // For error handling & advanced features
 //#include "..\\icqapi\\ICQAPIInterface.h"
@@ -3416,6 +3418,30 @@ public:
 		contextPlayerInfo->SetMute(!contextPlayerInfo->GetMute());
 	}
 
+	// BT - STEAM - Enable moderators to ban players by context menu.
+	void contextKickPlayer()
+	{
+		char szMessageParam[CB_ZTS];
+		lstrcpy(szMessageParam, "You have been moved to NOAT by an administrator.");
+		trekClient.SetMessageType(BaseClient::c_mtGuaranteed);
+		BEGIN_PFM_CREATE(trekClient.m_fm, pfmQuitSide, CS, QUIT_SIDE)
+			FM_VAR_PARM(szMessageParam, CB_ZTS)
+			END_PFM_CREATE
+			pfmQuitSide->shipID = contextPlayerInfo->ShipID();
+		pfmQuitSide->reason = QSR_SwitchingSides;
+	}
+
+	// BT - STEAM - Enable moderators to ban players by context menu.
+	void contextBanPlayer()
+	{
+		char szMessageParam[CB_ZTS];
+		lstrcpy(szMessageParam, "You have been banned from this game an administrator.");
+		trekClient.SetMessageType(BaseClient::c_mtGuaranteed);
+		BEGIN_PFM_CREATE(trekClient.m_fm, pfmQuitSide, CS, QUIT_MISSION)
+			FM_VAR_PARM(szMessageParam, CB_ZTS)
+			END_PFM_CREATE
+			pfmQuitSide->shipID = contextPlayerInfo->ShipID();
+		pfmQuitSide->reason = QSR_AdminBooted;
     //////////////////////////////////////////////////////////////////////////////
     //
     // ModelerSite
@@ -3525,6 +3551,7 @@ public:
     #define idmExitApp           12
     #define idmGameDetails       13
 	#define idmVersion           14 // TE: Added Version menu
+	#define idmTags				 15 // BT - STEAM - Let the user select thier group tag.																		
 
     #define idmChannelN          101
     #define idmChannelShow       102
@@ -3601,6 +3628,29 @@ public:
 	#define idmContextMakeLeader	803
 	#define idmContextMutePlayer	804
 
+	// BT - STEAM
+	#define idmCallsignTag0		900
+	#define idmCallsignTag1		901
+	#define idmCallsignTag2		902
+	#define idmCallsignTag3		903
+	#define idmCallsignTag4		904
+	#define idmCallsignTag5		905
+	#define idmCallsignTag6		906
+	#define idmCallsignTag7		907
+	#define idmCallsignTag8		908
+	#define idmCallsignTag9		909
+	#define idmCallsignTagNone	910 
+	
+	// BT - STEAM
+	#define idmToken0			920
+	#define idmToken1			921
+	#define idmToken2			922
+	#define idmToken3			923
+	#define idmToken4			924
+
+	// BT - STEAM - New player context menu options
+	#define idmContextKickPlayer	1000
+	#define idmContextBanPlayer		1001
 
 	/* SR: TakeScreenShot() grabs an image of the screen and saves it as a 24-bit
 	 * bitmap. Filename is determined by the user's local time.
@@ -3608,72 +3658,81 @@ public:
 	 */
 	void TakeScreenShot()
 	{
+		// BT - STEAM - When the user attempts to take a screen shot inside of Alleg, trigger the steam overlay to do it instead.
+		SteamScreenshots()->TriggerScreenshot();
+		return;		
+		
 		//capturing screen size this way (instead of using a native GDI call) will create
 		//windowed screen shots which look like they were taken with the game running
 		//in full screen mode.
-		Point currentResolution = GetRenderRectValue()->GetValue().Size();
-		int screenX = currentResolution.X();
-		int screenY = currentResolution.Y();
+		//Point currentResolution = GetRenderRectValue()->GetValue().Size();
+		//int screenX = currentResolution.X();
+		//int screenY = currentResolution.Y();
 
-		HDC hDesktopDC = GetDC();
-		HDC hCaptureDC = CreateCompatibleDC(hDesktopDC);
-		void* DIBBitValues;
-		BITMAPINFO bmpInfo = {0};
+		//HDC hDesktopDC = GetDC();
+		//HDC hCaptureDC = CreateCompatibleDC(hDesktopDC);
+		//void* DIBBitValues;
+		//BITMAPINFO bmpInfo = {0};
 
 		//build up the BITMAPINFOHEADER
-		bmpInfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
-		bmpInfo.bmiHeader.biWidth = screenX;
-		bmpInfo.bmiHeader.biHeight = screenY;
-		bmpInfo.bmiHeader.biPlanes = 1;
-		bmpInfo.bmiHeader.biBitCount = 24;
-		bmpInfo.bmiHeader.biCompression = BI_RGB;
+		//bmpInfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+		//bmpInfo.bmiHeader.biWidth = screenX;
+		//bmpInfo.bmiHeader.biHeight = screenY;
+		//bmpInfo.bmiHeader.biPlanes = 1;
+		//bmpInfo.bmiHeader.biBitCount = 24;
+		//bmpInfo.bmiHeader.biCompression = BI_RGB;
 
-		HBITMAP hCaptureBitmap = CreateDIBSection(hDesktopDC, &bmpInfo, DIB_RGB_COLORS, &DIBBitValues, NULL, NULL);
-		SelectObject(hCaptureDC, hCaptureBitmap);
-		BitBlt(hCaptureDC, 0, 0, screenX, screenY, hDesktopDC, 0, 0, SRCCOPY);
+		//HBITMAP hCaptureBitmap = CreateDIBSection(hDesktopDC, &bmpInfo, DIB_RGB_COLORS, &DIBBitValues, NULL, NULL);
+		//SelectObject(hCaptureDC, hCaptureBitmap);
+		//BitBlt(hCaptureDC, 0, 0, screenX, screenY, hDesktopDC, 0, 0, SRCCOPY);
 		
 		//populates bmpInfo.bmiHeader.biSizeImage with the actual size
-		GetDIBits(hDesktopDC, hCaptureBitmap, 0, 0, NULL, &bmpInfo, DIB_RGB_COLORS); 
+		//GetDIBits(hDesktopDC, hCaptureBitmap, 0, 0, NULL, &bmpInfo, DIB_RGB_COLORS); 
 
 		//build up the BITMAPFILEHEADER
-		BITMAPFILEHEADER bmpFileHeader = {0};
-		bmpFileHeader.bfType = 'MB';
-		bmpFileHeader.bfSize = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER) + bmpInfo.bmiHeader.biSizeImage;
-		bmpFileHeader.bfReserved1 = 0;
-		bmpFileHeader.bfReserved2 = 0;
-		bmpFileHeader.bfOffBits = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER); 
+		//BITMAPFILEHEADER bmpFileHeader = {0};
+		//bmpFileHeader.bfType = 'MB';
+		//bmpFileHeader.bfSize = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER) + bmpInfo.bmiHeader.biSizeImage;
+		//bmpFileHeader.bfReserved1 = 0;
+		//bmpFileHeader.bfReserved2 = 0;
+		//bmpFileHeader.bfOffBits = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER); 
 		
 		//create a filename for our screenshot using the local time
-		SYSTEMTIME sysTimeForName;
-		GetLocalTime(&sysTimeForName);
-		ZString scrnShotName = sysTimeForName.wYear;
-		scrnShotName += "-";
-		scrnShotName += sysTimeForName.wMonth;
-		scrnShotName += "-";
-		scrnShotName += sysTimeForName.wDay;
-		scrnShotName += "_";
-		scrnShotName += sysTimeForName.wHour;
-		scrnShotName += ".";
-		scrnShotName += sysTimeForName.wMinute;
-		scrnShotName += ".";
-		scrnShotName += sysTimeForName.wSecond;
-		scrnShotName += ".";
-		scrnShotName += sysTimeForName.wMilliseconds;
-		scrnShotName += ".bmp";
+		//SYSTEMTIME sysTimeForName;
+		//GetLocalTime(&sysTimeForName);
+		//ZString scrnShotName = sysTimeForName.wYear;
+		//scrnShotName += "-";
+		//scrnShotName += sysTimeForName.wMonth;
+		//scrnShotName += "-";
+		//scrnShotName += sysTimeForName.wDay;
+		//scrnShotName += "_";
+		//scrnShotName += sysTimeForName.wHour;
+		//scrnShotName += ".";
+		//scrnShotName += sysTimeForName.wMinute;
+		//scrnShotName += ".";
+		//scrnShotName += sysTimeForName.wSecond;
+		//scrnShotName += ".";
+		//scrnShotName += sysTimeForName.wMilliseconds;
+		//scrnShotName += ".bmp";
 
-		FILE* outputFile;
-		outputFile = fopen(scrnShotName,"wb");
+		//FILE* outputFile;
+		//outputFile = fopen(scrnShotName,"wb");
 		//write the BITMAPFILEHEADER, BITMAPINFOHEADER, and bimap bit values to create the *.bmp
-		fwrite(&bmpFileHeader, sizeof(BITMAPFILEHEADER), 1, outputFile);
-		fwrite(&bmpInfo.bmiHeader, sizeof(BITMAPINFOHEADER), 1, outputFile);
-		fwrite(DIBBitValues, bmpInfo.bmiHeader.biSizeImage, 1, outputFile); 
-		fclose(outputFile);
+		//fwrite(&bmpFileHeader, sizeof(BITMAPFILEHEADER), 1, outputFile);
+		//fwrite(&bmpInfo.bmiHeader, sizeof(BITMAPINFOHEADER), 1, outputFile);
+		//fwrite(DIBBitValues, bmpInfo.bmiHeader.biSizeImage, 1, outputFile); 
+		//fclose(outputFile);
 
-		ReleaseDC(hDesktopDC);
-		DeleteDC(hCaptureDC);
-		DeleteObject(hCaptureBitmap);
+		//ReleaseDC(hDesktopDC);
+		//DeleteDC(hCaptureDC);
+		//DeleteObject(hCaptureBitmap);
 	}
 
+	// BT - STEAM - TODO Move these to where the other globals are hiding?
+	CallsignTagInfo m_currentCallsignTag;
+#ifdef STEAM_APP_ID
+	SteamClans m_availableSteamClans;
+#endif
     void ShowMainMenu()
     {
         m_pmenu =
@@ -3716,7 +3775,43 @@ public:
         m_pmenu->AddMenuItem(idmGameOptions  , "Game",     'G', m_psubmenuEventSink);
 		m_pmenu->AddMenuItem(idmSoundOptions , "Sound"   , 'S', m_psubmenuEventSink);
 
+		// BT - STEAM - Let the user select their steam call sign from a list of options.
+#ifdef STEAM_APP_ID
+		if (m_availableSteamClans.GetAvailableCallsignTags()->GetCount() > 0)
+		{
+			ZString menuOption = "Squad Tags";
+			if (m_currentCallsignTag.m_steamGroupID > 0)
+			{
+				ZString currentName = trekClient.GetSavedCharacterName();
+				ZString renderedName = m_currentCallsignTag.Render(currentName);
+				menuOption = ZString("Squad Tags (") + renderedName + ")   ";
+			}
 
+			if (m_screen == ScreenIDSplashScreen || m_screen == ScreenIDIntroScreen || m_screen == ScreenIDZoneClubScreen)
+
+				m_pmenu->AddMenuItem(0, "");
+				m_pmenu->AddMenuItem(0, "Only Available Before");
+				m_pmenu->AddMenuItem(0, "Connecting to the Lobby");
+				m_pmenu->AddMenuItem(0, "--------------------------");
+				m_pmenu->AddMenuItem(idmTags, menuOption, 'T', m_psubmenuEventSink);
+
+
+				ZString tokens = m_currentCallsignTag.GetAvailableTokens();
+				if (tokens.GetLength() > 0)
+				{
+					for (int i = 0; i < tokens.GetLength(); i++)
+					{
+						if (tokens[i] == m_currentCallsignTag.m_callsignToken[0])
+							continue;
+
+						m_pmenu->AddMenuItem(idmToken0 + i, "Add Officer Token: ", tokens[i]);
+					}
+				}
+			}
+		}
+
+		// BT - STEAM - END.
+#endif
         if (trekClient.MyMission() != NULL) {
 			m_pmenu->AddMenuItem(0               , "");
 			m_pmenu->AddMenuItem(0               , "INFORMATION");
@@ -3735,6 +3830,23 @@ public:
         OpenPopup(m_pmenu, Point(10, 10));
     }
 	
+	// BT - Steam
+	bool IsPlayerSteamModerator()
+	{
+		// The MSAlleg Steam Group ID.
+		CSteamID moderatorGroupID = ((uint64)103582791460031578);
+		int clanCount = SteamFriends()->GetClanCount();
+		bool isModerator = false;
+		for (int i = 0; i < clanCount; i++)
+		{
+			if (SteamFriends()->GetClanByIndex(i) == moderatorGroupID)
+			{
+				isModerator = true;
+				break;
+			}
+		}
+
+		return isModerator;
 	// YP: Add this for the rightclick lobby patch
 	void ShowPlayerContextMenu(PlayerInfo * playerInfo)
 	{
@@ -3796,6 +3908,11 @@ public:
         if(bEnableMakeLeader)	m_pmenu->AddMenuItem(idmContextMakeLeader , str3 , 'L');
         if(bEnableMute)			m_pmenu->AddMenuItem(idmContextMutePlayer  , str4 , playerInfo->GetMute() == false ?'M' :'U');
 
+		// BT - STEAM - Enable moderators to ban players by context menu.
+		if (IsPlayerSteamModerator() && playerInfo->IsHuman())
+		{
+			m_pmenu->AddMenuItem(idmContextKickPlayer, "Kick To NOAT", 'K');
+			m_pmenu->AddMenuItem(idmContextBanPlayer, "Ban From Game", 'B');
 		Point popupPosition = GetMousePosition();
 		
 
@@ -3807,6 +3924,104 @@ public:
         OpenPopup(m_pmenu,	popupPosition);
 	}
 
+
+	//Xynth #48 8/2010 Add for player pane right click (initially miner dock)
+	void ShowPlayerPaneContextMenu(PlayerInfo * playerInfo)
+	{
+		contextPlayerInfo = playerInfo;
+
+		char str1[30];
+		char str2[30];
+		char str3[30];
+		char str4[30];
+
+		//Xynth #48 8/2010 Add Dock menu item
+		bool bEnableDock = false;
+		bool bEnableChat = false;
+		bool bEnableReject = false;
+		bool bEnableAccept = false;
+
+		//if (playerInfo->SideID() == trekClient.GetSideID())
+		//{
+		//	// pkk #211 08/05/2010 Allow all drones stay docked Xynth Only commander can staydock and launch
+		//	if (playerInfo->GetShip()->GetPilotType() < c_ptPlayer && trekClient.GetPlayerInfo()->IsTeamLeader())
+		//	{
+		//		if (playerInfo->GetShip()->GetPilotType() != c_ptCarrier)
+		//		{
+		//			if ((playerInfo->LastSeenState() == c_ssDocked || playerInfo->LastSeenState() == NULL) && playerInfo->GetShip()->GetStayDocked()) //Spunky #250					
+		//				sprintf(str1, "Launch  ");
+		//			else
+		//				sprintf(str1, "Dock    ");
+		//			bEnableDock = true;
+
+		//		}
+		//		else  //carrier
+		//		{
+		//			if (!(playerInfo->LastSeenState() == c_ssDocked || playerInfo->LastSeenState() == NULL))
+		//			{
+		//				sprintf(str1, "Dock/Flee ");  //if no shipyard, carriers go to nearest base players can launch from
+		//				bEnableDock = true;  //no launch, since carriers don't have a default command
+		//			}
+		//		}
+		//	}
+		//}
+
+		bEnableChat = (playerInfo->ShipID() != trekClient.GetShipID()) &&
+			(playerInfo->GetShip()->GetPilotType() == c_ptPlayer);
+		sprintf(str2, "Chat       ");
+
+		if (playerInfo->SideID() != trekClient.GetSideID())
+		{
+			if (trekClient.GetPlayerInfo()->IsTeamLeader())
+			{
+				sprintf(str3, "Accept       ");
+				bEnableAccept = trekClient.MyMission()->SideAvailablePositions(trekClient.GetSideID()) > 0
+					&& trekClient.MyMission()->FindRequest(trekClient.GetSideID(), playerInfo->ShipID());
+
+				sprintf(str4, "Reject       ");
+				bEnableReject = playerInfo->ShipID() != trekClient.GetShipID()
+					&& trekClient.MyMission()->FindRequest(trekClient.GetSideID(), playerInfo->ShipID())
+					&& (!trekClient.MyMission()->GetMissionParams().bLockTeamSettings
+						|| playerInfo->SideID() != trekClient.GetSideID());
+			}
+		}
+
+		bool bSteamModerator = IsPlayerSteamModerator();
+
+		if (bEnableDock || bEnableChat || bEnableReject || bEnableAccept || bSteamModerator)  //Xynth #205 8/2010 Will need || for any other menu options.  
+																							  //The point is don't create the menu if nothing is on it
+		{
+
+			m_pmenu =
+				CreateMenu(
+					GetModeler(),
+					TrekResources::SmallFont(),
+					m_pmenuCommandSink
+				);
+
+
+			//if (bEnableDock)			m_pmenu->AddMenuItem(idmContextDockDrone, str1, 'D'); //Xynth #48 8/2010
+			//if (bEnableChat)			m_pmenu->AddMenuItem(idmContextChat, str2, 'C'); //Xynth #197 8/2010
+			if (bEnableAccept)		m_pmenu->AddMenuItem(idmContextAcceptPlayer, str3, 'A');
+			if (bEnableReject)		m_pmenu->AddMenuItem(idmContextRejectPlayer, str4, 'R');
+
+			// BT - STEAM - Enable moderators to ban players by context menu.
+			if (bSteamModerator == true && bEnableDock == false && playerInfo->IsHuman())
+			{
+				m_pmenu->AddMenuItem(idmContextKickPlayer, "Kick To NOAT", 'K');
+				m_pmenu->AddMenuItem(idmContextBanPlayer, "Ban From Game", 'B');
+			}
+
+			Point popupPosition = GetMousePosition();
+
+
+			TRef<Pane> ppane = m_pmenu->GetPane();
+			ppane->UpdateLayout();
+			Point p = Point::Cast(ppane->GetSize());
+
+			popupPosition.SetY(popupPosition.Y() - p.Y());
+			OpenPopup(m_pmenu, popupPosition);
+		}
     void ShowOptionsMenu()
     {
         m_pmenu =
@@ -3824,6 +4039,52 @@ public:
         OpenPopup(m_pmenu, Point(10, 10));
     }
 
+	// BT - STEAM 
+#ifdef STEAM_APP_ID
+	void AddAvailablePlayerTagsToMenu(TRef<IMenu> pmenu)
+	{
+		pmenu->AddMenuItem(0, "Squad Tags");
+		pmenu->AddMenuItem(0, "--------------------------");
+
+		pmenu->AddMenuItem(idmCallsignTagNone, "<None>", 'X');
+
+		// Allow up to 30 tags to be shown.
+		// Backing this out for now, forgot to add additional idmCallsignTag* slots. 
+		for (int i = 0; i < m_availableSteamClans.GetAvailableCallsignTags()->GetCount() && i < 10; i++)
+		{
+			CallsignTagInfo item = m_availableSteamClans.GetAvailableCallsignTags()->Get(i);
+			pmenu->AddMenuItem(idmCallsignTag0 + i, item.m_callsignTag, 48 + item.m_index); // 48 = ASCII code for '0'.
+		}
+	}
+
+	// BT - STEAM
+	void SetPlayerCallsign(int playerCallsignIndex)
+	{
+		for (int i = 0; i < m_availableSteamClans.GetAvailableCallsignTags()->GetCount(); i++)
+		{
+			CallsignTagInfo callsignTagInfo = m_availableSteamClans.GetAvailableCallsignTags()->Get(i);
+
+			if (callsignTagInfo.m_index == playerCallsignIndex - idmCallsignTag0)
+			{
+				m_currentCallsignTag.SetSteamGroupID(callsignTagInfo.m_steamGroupID, callsignTagInfo.m_callsignTag);
+				break;
+			}
+		}
+	}
+
+	// BT - STEAM
+	void UnsetPlayerCallsign()
+	{
+		m_currentCallsignTag.SetSteamGroupID(0, "");
+	}
+
+	// BT - STEAM
+	void SetPlayerToken(int playerTokenIndex)
+	{
+		ZString tokens = m_currentCallsignTag.GetAvailableTokens();
+		m_currentCallsignTag.SetToken(tokens.Middle(idmToken0 - playerTokenIndex, 1));
+	}
+#endif
     TRef<IPopup> GetSubMenu(IMenuItem* pitem)
     {
         TRef<IMenu> pmenu =
@@ -3890,6 +4151,12 @@ public:
                     GetGainMenuString("Voice Over", m_pnumVoiceOverGain->GetValue(), -c_fVolumeDelta), 'C');
                 break;
 
+				// BT - STEAM
+#ifdef STEAM_APP_ID
+			case idmTags:
+				AddAvailablePlayerTagsToMenu(pmenu);
+				break;
+#endif
 			//TheBored 30-JUL-07: Filter Unknown Chat patch
 			case idmMuteFilterOptions:
                 m_pitemToggleCensorChats           = pmenu->AddMenuItem(idmToggleCensorChats,           GetCensorChatsMenuString(),         'D');
@@ -5212,6 +5479,50 @@ public:
 			case idmContextMutePlayer:
 				contextMute();			CloseMenu();
 				break;
+
+				// BT - STEAM - Enable moderators to ban players by context menu.
+			case idmContextKickPlayer:
+				contextKickPlayer();			CloseMenu();
+				break;
+
+				// BT - STEAM - Enable moderators to ban players by context menu.
+			case idmContextBanPlayer:
+				contextBanPlayer();				CloseMenu();
+				break;
+
+
+#ifdef STEAM_APP_ID
+				// BT - STEAM
+			case idmCallsignTag0:
+			case idmCallsignTag1:
+			case idmCallsignTag2:
+			case idmCallsignTag3:
+			case idmCallsignTag4:
+			case idmCallsignTag5:
+			case idmCallsignTag6:
+			case idmCallsignTag7:
+			case idmCallsignTag8:
+			case idmCallsignTag9:
+				SetPlayerCallsign(pitem->GetID());
+				CloseMenu();
+				break;
+
+				// BT - STEAM
+			case idmCallsignTagNone:
+				UnsetPlayerCallsign();
+				CloseMenu();
+				break;
+
+				// BT - STEAM
+			case idmToken0:
+			case idmToken1:
+			case idmToken2:
+			case idmToken3:
+			case idmToken4:
+				SetPlayerToken(pitem->GetID());
+				CloseMenu();
+				break;
+#endif
         }
     }
 
@@ -6969,6 +7280,8 @@ public:
                       float dt,
                       bool  activeControlsF)
     {
+		// BT - STEAM
+		SteamAPI_RunCallbacks();
 		// - Imago: Only set AFK from inactivity when logged on
 		if (trekClient.m_fLoggedOn) {
 			Time timeLastMouseMove;

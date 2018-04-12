@@ -92,7 +92,7 @@
     <ClCompile>
       <InlineFunctionExpansion>Default</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <AdditionalIncludeDirectories>..\Inc;..\igc;..\_Utility;..\ZLib;..\WinTrek;..\jpeg;..\clintlib;..\Zone;..\training;..\lobby;..\engine;..\guids;..\..\FreeZoneAuth;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Lib\AllegianceSecurity;..\Lib\Steam;..\Inc;..\igc;..\_Utility;..\ZLib;..\WinTrek;..\jpeg;..\clintlib;..\Zone;..\training;..\lobby;..\engine;..\guids;..\..\FreeZoneAuth;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>USEAUTH;WIN32;_WINDOWS;STRICT;_AFXDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
@@ -103,7 +103,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\Inc;..\igc;..\_Utility;..\ZLib;..\WinTrek;..\jpeg;..\clintlib;..\Zone;..\training;..\lobby;..\engine;..\guids;..\..\FreeZoneAuth;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Lib\AllegianceSecurity;..\Lib\Steam;..\Inc;..\igc;..\_Utility;..\ZLib;..\WinTrek;..\jpeg;..\clintlib;..\Zone;..\training;..\lobby;..\engine;..\guids;..\..\FreeZoneAuth;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>USEAUTH;WIN32;_WINDOWS;STRICT;_AFXDLL;_DEBUG;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ExceptionHandling />
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -117,8 +117,8 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='FZDebug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\Inc;..\igc;..\_Utility;..\ZLib;..\WinTrek;..\jpeg;..\clintlib;..\Zone;..\training;..\lobby;..\engine;..\guids;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;STRICT;_AFXDLL;_DEBUG;DEBUG;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\Lib\AllegianceSecurity;..\Lib\Steam;..\Inc;..\igc;..\_Utility;..\ZLib;..\WinTrek;..\jpeg;..\clintlib;..\Zone;..\training;..\lobby;..\engine;..\guids;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_ALLOW_RTCc_IN_STL;DUMPMSGS;WIN32;_WINDOWS;STRICT;_AFXDLL;_DEBUG;DEBUG;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ExceptionHandling>Sync</ExceptionHandling>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -128,13 +128,14 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+	  <SmallerTypeCheck>true</SmallerTypeCheck>										   
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='FZRetail|Win32'">
     <ClCompile>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <AdditionalIncludeDirectories>..\Inc;..\igc;..\_Utility;..\ZLib;..\WinTrek;..\jpeg;..\clintlib;..\Zone;..\training;..\lobby;..\engine;..\guids;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;STRICT;_AFXDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\Lib\AllegianceSecurity;..\Lib\Steam;..\Inc;..\igc;..\_Utility;..\ZLib;..\WinTrek;..\jpeg;..\clintlib;..\Zone;..\training;..\lobby;..\engine;..\guids;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>STEAMSECURE;WIN32;_WINDOWS;STRICT;_AFXDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <BufferSecurityCheck>true</BufferSecurityCheck>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
