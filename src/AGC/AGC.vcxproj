@@ -121,7 +121,7 @@
       <Command>lib /out:$(OutDir)AGCGuid.lib $(OutDir)AGCGuid.obj</Command>
     </PreLinkEvent>
     <Link>
-      <AdditionalDependencies>$(OutDir)AGCGuid.lib;$(OutDir)..\Test\TCLib\TCLib.lib;$(OutDir)..\ZLib\ZLib.lib;$(OutDir)..\_utility\Utility.lib;$(OutDir)..\igc\igc.lib;version.lib;Winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\Lib\Steam\steam_api.lib;dbghelp.lib;$(OutDir)AGCGuid.lib;$(OutDir)..\Test\TCLib\TCLib.lib;$(OutDir)..\ZLib\ZLib.lib;$(OutDir)..\_utility\Utility.lib;$(OutDir)..\igc\igc.lib;version.lib;Winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ShowProgress>NotSet</ShowProgress>
       <SuppressStartupBanner>false</SuppressStartupBanner>
       <IgnoreSpecificDefaultLibraries>LIBCMT.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
@@ -159,7 +159,7 @@
       <Command>lib /out:$(OutDir)AGCGuid.lib $(OutDir)AGCGuid.obj</Command>
     </PreLinkEvent>
     <Link>
-      <AdditionalDependencies>$(OutDir)AGCGuid.lib;$(OutDir)..\Test\TCLib\TCLib.lib;$(OutDir)..\ZLib\ZLib.lib;$(OutDir)..\_utility\Utility.lib;$(OutDir)..\igc\igc.lib;version.lib;Winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\Lib\Steam\steam_api.lib;dbghelp.lib;$(OutDir)AGCGuid.lib;$(OutDir)..\Test\TCLib\TCLib.lib;$(OutDir)..\ZLib\ZLib.lib;$(OutDir)..\_utility\Utility.lib;$(OutDir)..\igc\igc.lib;version.lib;Winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ShowProgress>NotSet</ShowProgress>
       <SuppressStartupBanner>false</SuppressStartupBanner>
       <ModuleDefinitionFile>AGC.def</ModuleDefinitionFile>
@@ -200,7 +200,7 @@
       <Command>lib /out:$(OutDir)AGCGuid.lib $(OutDir)AGCGuid.obj</Command>
     </PreLinkEvent>
     <Link>
-      <AdditionalDependencies>$(OutDir)AGCGuid.lib;$(OutDir)..\Test\TCLib\TCLib.lib;$(OutDir)..\ZLib\ZLib.lib;$(OutDir)..\_utility\Utility.lib;$(OutDir)..\igc\igc.lib;version.lib;Winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\Lib\Steam\steam_api.lib;dbghelp.lib;$(OutDir)AGCGuid.lib;$(OutDir)..\Test\TCLib\TCLib.lib;$(OutDir)..\ZLib\ZLib.lib;$(OutDir)..\_utility\Utility.lib;$(OutDir)..\igc\igc.lib;version.lib;Winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ShowProgress>NotSet</ShowProgress>
       <SuppressStartupBanner>false</SuppressStartupBanner>
       <ModuleDefinitionFile>AGC.def</ModuleDefinitionFile>
@@ -243,7 +243,7 @@
       <Command>lib /out:$(OutDir)AGCGuid.lib $(OutDir)AGCGuid.obj</Command>
     </PreLinkEvent>
     <Link>
-      <AdditionalDependencies>$(OutDir)AGCGuid.lib;$(OutDir)..\Test\TCLib\TCLib.lib;$(OutDir)..\ZLib\ZLib.lib;$(OutDir)..\_utility\Utility.lib;$(OutDir)..\igc\igc.lib;version.lib;Winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\Lib\Steam\steam_api.lib;dbghelp.lib;$(OutDir)AGCGuid.lib;$(OutDir)..\Test\TCLib\TCLib.lib;$(OutDir)..\ZLib\ZLib.lib;$(OutDir)..\_utility\Utility.lib;$(OutDir)..\igc\igc.lib;version.lib;Winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ShowProgress>NotSet</ShowProgress>
       <SuppressStartupBanner>false</SuppressStartupBanner>
       <IgnoreSpecificDefaultLibraries>LIBCMT.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>

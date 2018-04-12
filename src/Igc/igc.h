@@ -1252,7 +1252,7 @@ struct MissionParams
         nNeutralSectorSpecialAsteroids  = 1;
 
         nInitialMinersPerTeam           = 1;
-        nMaxMinersPerTeam               = 4;
+        nMaxDronesPerTeam               = 4;
 
         nMinPlayersPerTeam              = 1;   // KGJV #114 changed
         nMaxPlayersPerTeam              = 100; // KGJV #114 changed
