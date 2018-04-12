@@ -4001,9 +4001,6 @@ void BaseClient::AddPlayerToSide(PlayerInfo* pPlayerInfo, SideID sideID)
 
             ReceiveChat(NULL, CHAT_TEAM, NA, salEnemyJoinersSound, msg, c_cidNone, NA, NA);
         }
-
-
-		m_pPlayerInfo = pPlayerInfo;
     }
 }
 
