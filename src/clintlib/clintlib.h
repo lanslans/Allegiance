@@ -702,8 +702,8 @@ private:
     BallotList              m_listBallots;
 
 	// BT - STEAM
-	HAuthTicket				m_hAuthTicketLobby = 0;
-	HAuthTicket				m_hAuthTicketServer = 0;
+	HAuthTicket				m_hAuthTicketLobby; //BBT was = 0;
+	HAuthTicket				m_hAuthTicketServer; //BBT was = 0;
 public: //todo: make protected
 
     // messaging

@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "regkey.h"
-#include <cstdint>
+//#include <cstdint>
+#include "..\Inc\nullptr_emulation.h" //BBT
+
 #include <dbghelp.h>
 #include "..\Lib\steam\steam_api.h"		   
 
@@ -60,7 +62,7 @@ int Win32App::GenerateDump(EXCEPTION_POINTERS* pExceptionPointers)
 	MINIDUMP_TYPE mdt = (MINIDUMP_TYPE)
 		(MiniDumpWithDataSegs |
 			MiniDumpWithHandleData |
-			MiniDumpWithThreadInfo |
+//BBT fix this			MiniDumpWithThreadInfo |
 			MiniDumpWithUnloadedModules |
 			MiniDumpWithProcessThreadData);
 
@@ -121,7 +123,7 @@ int GenerateDump(EXCEPTION_POINTERS* pExceptionPointers)
 	MINIDUMP_TYPE mdt = (MINIDUMP_TYPE)
 		(MiniDumpWithDataSegs |
 			MiniDumpWithHandleData |
-			MiniDumpWithThreadInfo |
+//BBT fix this			MiniDumpWithThreadInfo |
 			MiniDumpWithUnloadedModules |
 			MiniDumpWithProcessThreadData);
 

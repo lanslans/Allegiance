@@ -18,11 +18,12 @@
 
 #pragma once
 
-#include <cstdint>
+//#include <cstdint>
 #include <map>
 #include <string>
 #include <vector>
 #include <windows.h>
+#include "..\Inc\int_types.h" //BBT
 
 struct FunctionCall 
 {

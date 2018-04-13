@@ -51,6 +51,8 @@
     <ClInclude Include="WinTrek.H" />
     <ClInclude Include="wintrekp.h" />
     <ClInclude Include="ZoneSquad.h" />
+    <ClInclude Include="CallsignTagInfo.h" />
+    <ClInclude Include="SteamClans.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cdkeydialog.cpp" />
@@ -103,5 +105,7 @@
     <ClCompile Include="ZoneClubScreen.cpp" />
     <ClCompile Include="zoneeventsscreen.cpp" />
     <ClCompile Include="ZoneSquad.cpp" />
+    <ClCompile Include="CallsignTagInfo.cpp" />
+    <ClCompile Include="SteamClans.cpp" />
   </ItemGroup>
 </Project>

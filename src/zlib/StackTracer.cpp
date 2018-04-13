@@ -4,6 +4,7 @@
 
 #include "zassert.h"
 
+#include "..\Inc\nullptr_emulation.h" //BBT
 /*
 // -- https://www.codeproject.com/Articles/41923/Get-the-call-stack-when-an-exception-is-being-caug
 // Description: This class is used to get the call stack when there is an exception being caught use SEH

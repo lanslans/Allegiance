@@ -30,6 +30,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AGC", "AGC\AGC.vcxproj", "{1CBF6569-F71C-422A-81DD-8D30A736DB21}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Allegiance", "WinTrek\Allegiance.vcxproj", "{3702DB5A-C966-4133-824F-5958F4BF9BCF}"
+	ProjectSection(ProjectDependencies) = postProject
+		{1CBF6569-F71C-422A-81DD-8D30A736DB21} = {1CBF6569-F71C-422A-81DD-8D30A736DB21}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Server", "FedSrv\Server.vcxproj", "{05EAD557-56B0-4070-83F0-8A2B6FB9C54D}"
 EndProject

@@ -1,5 +1,6 @@
 #include "pch.h"
-#include <cstdint>				  
+//#include <cstdint>				  
+#include "..\Inc\nullptr_emulation.h" //BBT
 
 ////////////////////////////////////////////////////////////////////////////////
 //

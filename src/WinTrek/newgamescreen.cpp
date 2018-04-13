@@ -156,6 +156,8 @@ private:
 			const char* vszSkillLevelNames[2] = {"GameSkillLevelMin", "GameSkillLevelMax"};
 			float vfSkillLevel[2] = { (float)missionparams.iMinRank, (float)missionparams.iMaxRank };
 			m_pcomboSkillLevel     ->SetSelection(FindClosestValue(vfSkillLevel, vszSkillLevelNames, 2));
+		}
+
         m_pcomboConnectivity   ->SetSelection(FindClosestValue(missionparams.iRandomEncounters, "ConnectivityValues"));
         m_pcomboLives          ->SetSelection(FindClosestValue(missionparams.iLives, "LivesValues"));
 

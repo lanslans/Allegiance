@@ -5,7 +5,8 @@
 // BT - STEAM
 #ifdef STEAM_APP_ID
 # include "atlenc.h"
-# include <inttypes.h>
+//# include <inttypes.h>
+#include "..\Inc\int_types.h" //BBT
 #endif
 //////////////////////////////////////////////////////////////////////////////
 //
@@ -340,14 +341,14 @@ public:
         _controlfp(_PC_53, _MCW_PC);
 
 #ifdef STEAM_APP_ID
-		// BT - STEAM
-#ifndef _DEBUG
-		if (IsDebuggerPresent() == false)
-		{
-			if (SteamAPI_RestartAppIfNecessary(STEAM_APP_ID) == true)
-				::exit(-1);
-		}
-#endif
+		// BT - STEAM - BBT just trying to get it to build!
+//#ifndef _DEBUG
+//		if (IsDebuggerPresent() == false)
+//		{
+//			if (SteamAPI_RestartAppIfNecessary(STEAM_APP_ID) == true)
+//				::exit(-1);
+//		}
+//#endif
 
 		bool steamInitResult = SteamAPI_Init();
 		if (steamInitResult == false)

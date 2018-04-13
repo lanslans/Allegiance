@@ -3442,6 +3442,8 @@ public:
 			END_PFM_CREATE
 			pfmQuitSide->shipID = contextPlayerInfo->ShipID();
 		pfmQuitSide->reason = QSR_AdminBooted;
+	}
+
     //////////////////////////////////////////////////////////////////////////////
     //
     // ModelerSite
@@ -3788,6 +3790,7 @@ public:
 			}
 
 			if (m_screen == ScreenIDSplashScreen || m_screen == ScreenIDIntroScreen || m_screen == ScreenIDZoneClubScreen)
+			{
 
 				m_pmenu->AddMenuItem(0, "");
 				m_pmenu->AddMenuItem(0, "Only Available Before");
@@ -3847,6 +3850,8 @@ public:
 		}
 
 		return isModerator;
+	}
+
 	// YP: Add this for the rightclick lobby patch
 	void ShowPlayerContextMenu(PlayerInfo * playerInfo)
 	{
@@ -3913,6 +3918,8 @@ public:
 		{
 			m_pmenu->AddMenuItem(idmContextKickPlayer, "Kick To NOAT", 'K');
 			m_pmenu->AddMenuItem(idmContextBanPlayer, "Ban From Game", 'B');
+		}
+
 		Point popupPosition = GetMousePosition();
 		
 
@@ -4022,6 +4029,8 @@ public:
 			popupPosition.SetY(popupPosition.Y() - p.Y());
 			OpenPopup(m_pmenu, popupPosition);
 		}
+	}
+
     void ShowOptionsMenu()
     {
         m_pmenu =

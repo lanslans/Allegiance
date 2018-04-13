@@ -28,6 +28,29 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
 
+//unsigned long int strtoul(const char * ptr,
+//	char ** endptr,
+//	int base);
+
+//BBT placed here for convenience
+unsigned long long strtoull(const char * ptr,
+	char ** endptr,
+	int base);
+
+//unsigned long long strtoull_simple2(const char *s) {
+//	unsigned sumu = 0;
+//	while (*s) {
+//		sumu = sumu * 10 + (*s++ - '0');
+//		if (sumu >= (UINT_MAX - 10) / 10) break;  // Break if next loop may overflow
+//	}
+//	unsigned long long sum = sumu;
+//	while (*s) {
+//		sum = sum * 10 + (*s++ - '0');
+//	}
+//	return sum;
+//}
+
+#define PRIu64       "llu"
 
 #ifdef _MSC_VER
 

@@ -7,7 +7,8 @@
 #ifndef _Win32App_h_
 #define _Win32App_h_
 
-#include <cstdint>
+//#include <cstdint>
+#include "..\Inc\int_types.h" //BBT
 class ExceptionData {
 public:
     EXCEPTION_RECORD *ExceptionRecord;

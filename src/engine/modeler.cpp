@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "..\Inc\nullptr_emulation.h" //BBT
 #include "AllegianceSecurity.h"
 #include "steam_api.h"
 
