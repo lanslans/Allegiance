@@ -2873,7 +2873,7 @@ ZString WinTrekClient::GetSavedCharacterName()
     char szName[c_cbName];
     szName[0] = '\0';
     
-    if (ERROR_SUCCESS == RegOpenKeyEx(HKEY_LOCAL_MACHINE, ALLEGIANCE_REGISTRY_KEY_ROOT, 0, KEY_READ, &hKey)) 
+    if (ERROR_SUCCESS == RegOpenKeyEx(HKEY_CURRENT_USER, ALLEGIANCE_REGISTRY_KEY_ROOT, 0, KEY_READ, &hKey))
     {
         RegQueryValueEx(hKey, "CharacterName", NULL, &dwType, (unsigned char*)&szName, &cbName);
         RegCloseKey(hKey);
@@ -2889,7 +2889,7 @@ void WinTrekClient::SaveCharacterName(ZString strName)
     char szName[c_cbName];
     szName[0] = '\0';
     
-    if (ERROR_SUCCESS == RegOpenKeyEx(HKEY_LOCAL_MACHINE, ALLEGIANCE_REGISTRY_KEY_ROOT, 0, KEY_WRITE, &hKey)) 
+    if (ERROR_SUCCESS == RegOpenKeyEx(HKEY_CURRENT_USER, ALLEGIANCE_REGISTRY_KEY_ROOT, 0, KEY_WRITE, &hKey))
     {
         RegSetValueEx(hKey, "CharacterName", NULL, REG_SZ, 
             (const BYTE*)(const char*)strName, strName.GetLength() + 1);

@@ -182,6 +182,7 @@ xcopy $(ProjectDir)..\lib\FreeImage\FreeImage.dll $(OutDir) /s /d /y</Command>
       <GenerateMapFile>true</GenerateMapFile>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
+	  <Profile>true</Profile>
       <RandomizedBaseAddress />
     </Link>
     <PostBuildEvent>

@@ -41,7 +41,7 @@ bool g_bAskForCallSign = true ; // wlp 2006
 // Trek Application Implementation
 //
 //////////////////////////////////////////////////////////////////////////////
-#define GAME_REG_KEY        "Software\\Microsoft\\Microsoft Games\\Allegiance\\1.0"
+//#define GAME_REG_KEY        "Software\\Microsoft\\Microsoft Games\\Allegiance\\1.0"
 
 typedef DWORD (*EBUPROC) (LPCTSTR lpRegKeyLocation, LPCTSTR lpEULAFileName, LPCSTR lpWarrantyFileName, BOOL fCheckForFirstRun);
 
@@ -233,7 +233,7 @@ bool CheckForAllGuard()
 
   // Get the ArtPath, since that's where AllGuard.exe should be
   HKEY hKey = NULL;
-  if (ERROR_SUCCESS != ::RegOpenKeyEx(HKEY_LOCAL_MACHINE, ALLEGIANCE_REGISTRY_KEY_ROOT, 0, KEY_READ, &hKey))
+  if (ERROR_SUCCESS != ::RegOpenKeyEx(HKEY_CURRENT_USER, ALLEGIANCE_REGISTRY_KEY_ROOT, 0, KEY_READ, &hKey))
     return true; // If it can't be read, just keep running
   char szArtPath[_MAX_PATH];
   DWORD cbArtPath = sizeof(szArtPath);
@@ -384,7 +384,7 @@ public:
           DWORD cbValue = MAX_PATH;
 
           // NOTE: please keep reloader.cpp's GetArtPath() in sync with this!!!
-          if (ERROR_SUCCESS == ::RegOpenKeyEx(HKEY_LOCAL_MACHINE, ALLEGIANCE_REGISTRY_KEY_ROOT, 0, KEY_READ, &hKey))
+          if (ERROR_SUCCESS == ::RegOpenKeyEx(HKEY_CURRENT_USER, ALLEGIANCE_REGISTRY_KEY_ROOT, 0, KEY_READ, &hKey))
           {
               // Get MoveInProgress from registry
               if (ERROR_SUCCESS == ::RegQueryValueEx(hKey, "MoveInProgress", NULL, &dwType, (unsigned char*)&szValue, &cbValue) &&
@@ -474,7 +474,7 @@ public:
         DWORD cbValue = MAX_PATH;
 
         // NOTE: please keep reloader.cpp's GetArtPath() in sync with this!!!
-        if (ERROR_SUCCESS == ::RegOpenKeyEx(HKEY_LOCAL_MACHINE, ALLEGIANCE_REGISTRY_KEY_ROOT, 0, KEY_READ, &hKey))
+        if (ERROR_SUCCESS == ::RegOpenKeyEx(HKEY_CURRENT_USER, ALLEGIANCE_REGISTRY_KEY_ROOT, 0, KEY_READ, &hKey))
         {
             // Get the art path from the registry
             if (ERROR_SUCCESS != ::RegQueryValueEx(hKey, "ArtPath", NULL, &dwType, (unsigned char*)&szValue, &cbValue))
