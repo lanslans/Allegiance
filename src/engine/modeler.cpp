@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "..\Inc\nullptr_emulation.h" //BBT
-#include "AllegianceSecurity.h"
+//#include "AllegianceSecurity.h"
 #include "steam_api.h"
 
 //////////////////////////////////////////////////////////////////////////////
@@ -2221,7 +2221,7 @@ private:
     PathString        m_pathStr;
 
 	// BT - STEAM
-	FileHashTable			m_fileHashTable;
+//	FileHashTable			m_fileHashTable;
     TMap<ZString, TRef<INameSpace> > m_mapNameSpace;
 
 public:
@@ -2522,10 +2522,10 @@ public:
 
 				// BT - STEAM - Do the security checksum  on the loaded file here. Steam DRM wrapper will ensure that the Allegiance exe is not
 				// tampered with, so basic checksums are all that is required.
-				if (m_fileHashTable.IsHashCorrect(strToOpen, pfile) == false)
+//				if (m_fileHashTable.IsHashCorrect(strToOpen, pfile) == false)
 				{
 					// Cause the calls downward to fail out.
-					pfile = new ZFile("failsauce.nope");
+//					pfile = new ZFile("failsauce.nope");
 				}
 #endif
 			}

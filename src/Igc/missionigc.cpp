@@ -55,7 +55,7 @@
 #include    "droneTypeIGC.h"
 #include    "bucketigc.h"
 #include    "mapmakerigc.h"
-#include    "AllegianceSecurity.h"								  
+//#include    "AllegianceSecurity.h"								  
 static void DoDecrypt(int size, char* pdata)
 {
     DWORD encrypt = 0;

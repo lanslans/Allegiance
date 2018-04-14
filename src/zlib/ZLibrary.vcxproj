@@ -153,7 +153,7 @@
     <ClCompile>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <AdditionalIncludeDirectories>..\Inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>STEAMSECURE;SRVLOG;_AFXDLL;WIN32;_WINDOWS;STRICT;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>SRVLOG;_AFXDLL;WIN32;_WINDOWS;STRICT;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ExceptionHandling />
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <BufferSecurityCheck>true</BufferSecurityCheck>
@@ -194,7 +194,6 @@
     <ClInclude Include="point.h" />
     <ClInclude Include="quaternion.h" />
     <ClInclude Include="rect.h" />
-    <ClInclude Include="StackTracer.h" />	 
     <ClInclude Include="tcompare.h" />
     <ClInclude Include="tlist.h" />
     <ClInclude Include="TlsValue.h" />
@@ -240,7 +239,6 @@
     <ClCompile Include="orientation.cpp" />
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="quaternion.cpp" />
-    <ClCompile Include="StackTracer.cpp" />
     <ClCompile Include="tlist.cpp" />
     <ClCompile Include="token.cpp" />
     <ClCompile Include="vector.cpp" />

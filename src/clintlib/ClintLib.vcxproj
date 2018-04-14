@@ -117,7 +117,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='FZDebug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\Lib\AllegianceSecurity;..\Lib\Steam;..\Inc;..\igc;..\_Utility;..\ZLib;..\WinTrek;..\jpeg;..\clintlib;..\Zone;..\training;..\lobby;..\engine;..\guids;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Lib\Steam;..\Inc;..\igc;..\_Utility;..\ZLib;..\WinTrek;..\jpeg;..\clintlib;..\Zone;..\training;..\lobby;..\engine;..\guids;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_ALLOW_RTCc_IN_STL;DUMPMSGS;WIN32;_WINDOWS;STRICT;_AFXDLL;_DEBUG;DEBUG;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ExceptionHandling>Sync</ExceptionHandling>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -134,7 +134,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='FZRetail|Win32'">
     <ClCompile>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <AdditionalIncludeDirectories>..\Lib\AllegianceSecurity;..\Lib\Steam;..\Inc;..\igc;..\_Utility;..\ZLib;..\WinTrek;..\jpeg;..\clintlib;..\Zone;..\training;..\lobby;..\engine;..\guids;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Lib\Steam;..\Inc;..\igc;..\_Utility;..\ZLib;..\WinTrek;..\jpeg;..\clintlib;..\Zone;..\training;..\lobby;..\engine;..\guids;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>STEAMSECURE;WIN32;_WINDOWS;STRICT;_AFXDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <BufferSecurityCheck>true</BufferSecurityCheck>

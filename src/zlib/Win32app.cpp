@@ -1,10 +1,5 @@
 #include "pch.h"
 #include "regkey.h"
-//#include <cstdint>
-#include "..\Inc\nullptr_emulation.h" //BBT
-
-#include <dbghelp.h>
-#include "..\Lib\steam\steam_api.h"		   
 
 //////////////////////////////////////////////////////////////////////////////
 //
@@ -14,132 +9,6 @@
 
 Win32App *g_papp;
 
-// Patch for SetUnhandledExceptionFilter 
-const uint8_t PatchBytes[5] = { 0x33, 0xC0, 0xC2, 0x04, 0x00 };
-
-// Original bytes at the beginning of SetUnhandledExceptionFilter 
-uint8_t OriginalBytes[5] = { 0 };
-
-//Imago 6/10
-int Win32App::GenerateDump(EXCEPTION_POINTERS* pExceptionPointers)
-{
-	BOOL bMiniDumpSuccessful;
-	char szPathName[MAX_PATH] = "";
-	GetModuleFileNameA(nullptr, szPathName, MAX_PATH);
-	const char* p1 = strrchr(szPathName, '\\');
-	char* p = strrchr(szPathName, '\\');
-	if (!p)
-		p = szPathName;
-	else
-		p++;
-	if (!p1)
-		p1 = "mini";
-	else
-		p1++;
-	ZString zApp = p1;
-	uint32_t dwBufferSize = MAX_PATH;
-	HANDLE hDumpFile;
-	SYSTEMTIME stLocalTime;
-	MINIDUMP_EXCEPTION_INFORMATION ExpParam;
-
-	GetLocalTime(&stLocalTime);
-
-	strcpy(p, (PCC)zApp);
-
-	ZVersionInfo vi; ZString zInfo = (LPCSTR)vi.GetFileVersionString();
-	sprintf(p + zApp.GetLength(), "-%s-%04d%02d%02d%02d%02d%02d-%ld-%ld.dmp", (PCC)zInfo,
-		stLocalTime.wYear, stLocalTime.wMonth, stLocalTime.wDay,
-		stLocalTime.wHour, stLocalTime.wMinute, stLocalTime.wSecond,
-		GetCurrentProcessId(), GetCurrentThreadId());
-
-	hDumpFile = CreateFileA(szPathName, GENERIC_READ | GENERIC_WRITE,
-		FILE_SHARE_WRITE | FILE_SHARE_READ, nullptr, CREATE_ALWAYS, 0, nullptr);
-
-	ExpParam.ThreadId = GetCurrentThreadId();
-	ExpParam.ExceptionPointers = pExceptionPointers;
-	ExpParam.ClientPointers = TRUE;
-
-	MINIDUMP_TYPE mdt = (MINIDUMP_TYPE)
-		(MiniDumpWithDataSegs |
-			MiniDumpWithHandleData |
-//BBT fix this			MiniDumpWithThreadInfo |
-			MiniDumpWithUnloadedModules |
-			MiniDumpWithProcessThreadData);
-
-	//
-	//MiniDumpWithPrivateReadWriteMemory | 
-	//MiniDumpWithFullMemoryInfo | 
-	//
-
-	bMiniDumpSuccessful = MiniDumpWriteDump(GetCurrentProcess(), GetCurrentProcessId(),
-		hDumpFile, mdt, &ExpParam, nullptr, nullptr);
-#ifndef NO_STEAM
-	SteamAPI_SetMiniDumpComment(p);
-
-	// The 0 here is a build ID, we don't set it
-	SteamAPI_WriteMiniDump(0, pExceptionPointers, 0); // Now including build and release number in steam errors.
-#endif // !NO_STEAM
-	return EXCEPTION_EXECUTE_HANDLER;
-}
-
-//lazy...or stupid... is this even hit?
-int GenerateDump(EXCEPTION_POINTERS* pExceptionPointers)
-{
-	BOOL bMiniDumpSuccessful;
-	char szPathName[MAX_PATH] = "";
-	GetModuleFileNameA(nullptr, szPathName, MAX_PATH);
-	const char* p1 = strrchr(szPathName, '\\');
-	char* p = strrchr(szPathName, '\\');
-	if (!p)
-		p = szPathName;
-	else
-		p++;
-	if (!p1)
-		p1 = "mini";
-	else
-		p1++;
-	ZString zApp = p1;
-	uint32_t dwBufferSize = MAX_PATH;
-	HANDLE hDumpFile;
-	SYSTEMTIME stLocalTime;
-	MINIDUMP_EXCEPTION_INFORMATION ExpParam;
-
-	GetLocalTime(&stLocalTime);
-
-	strcpy(p, (PCC)zApp);
-	ZVersionInfo vi; ZString zInfo = (LPCSTR)vi.GetFileVersionString();
-	sprintf(p + zApp.GetLength(), "-%s-%04d%02d%02d%02d%02d%02d-%ld-%ld.dmp", (PCC)zInfo,
-		stLocalTime.wYear, stLocalTime.wMonth, stLocalTime.wDay,
-		stLocalTime.wHour, stLocalTime.wMinute, stLocalTime.wSecond,
-		GetCurrentProcessId(), GetCurrentThreadId());
-
-	hDumpFile = CreateFileA(szPathName, GENERIC_READ | GENERIC_WRITE,
-		FILE_SHARE_WRITE | FILE_SHARE_READ, nullptr, CREATE_ALWAYS, 0, nullptr);
-
-	ExpParam.ThreadId = GetCurrentThreadId();
-	ExpParam.ExceptionPointers = pExceptionPointers;
-	ExpParam.ClientPointers = TRUE;
-
-	MINIDUMP_TYPE mdt = (MINIDUMP_TYPE)
-		(MiniDumpWithDataSegs |
-			MiniDumpWithHandleData |
-//BBT fix this			MiniDumpWithThreadInfo |
-			MiniDumpWithUnloadedModules |
-			MiniDumpWithProcessThreadData);
-
-	bMiniDumpSuccessful = MiniDumpWriteDump(GetCurrentProcess(), GetCurrentProcessId(),
-		hDumpFile, mdt, &ExpParam, nullptr, nullptr);
-#ifndef NO_STEAM
-	// BT - STEAM
-	SteamAPI_SetMiniDumpComment(p);
-
-	// The 0 here is a build ID, we don't set it
-	SteamAPI_WriteMiniDump(0, pExceptionPointers, 0); // Now including build and release number in steam errors.
-#endif
-	return EXCEPTION_EXECUTE_HANDLER;
-}
-
-
 //////////////////////////////////////////////////////////////////////////////
 //
 // Some assertion functions
@@ -147,29 +16,19 @@ int GenerateDump(EXCEPTION_POINTERS* pExceptionPointers)
 //////////////////////////////////////////////////////////////////////////////
 void ZAssertImpl(bool bSucceeded, const char* psz, const char* pszFile, int line, const char* pszModule)
 {
-	if (!bSucceeded) {
-		//
-		// Just in case this was a Win32 error get the last error
-		//
+    if (!bSucceeded) {
+        //
+        // Just in case this was a Win32 error get the last error
+        //
 
-									   
+        DWORD dwError = GetLastError();
 
-		uint32_t dwError = GetLastError();
-#ifdef _MSC_VER
-		if (!g_papp) {
-			// Imago removed asm (x64) on ?/?, integrated with mini dump on 6/10
-			__try {
-				(*(int*)nullptr) = 0;
-			}
-			__except (GenerateDump(GetExceptionInformation())) {}
-		}
-		else if (g_papp->OnAssert(psz, pszFile, line, pszModule)) {
-			g_papp->OnAssertBreak();
-		}
-#else
-		::abort();
-#endif
-	}
+        if (!g_papp) {
+            __asm int 3; // (debug break)
+        } else if (g_papp->OnAssert(psz, pszFile, line, pszModule)) {
+            g_papp->OnAssertBreak();
+        }
+    }
 }
 
 // mmf added code for chat logging
@@ -576,136 +435,6 @@ void Win32App::OnAssertBreak()
     //
 
     (*(int*)0) = 0;
-}
-
-
-bool Win32App::WriteMemory(uint8_t* pTarget, const uint8_t* pSource, uint32_t Size)
-{
-	uint32_t ErrCode = 0;
-
-
-	// Check parameters 
-
-	if (pTarget == nullptr)
-	{
-		_ASSERTE(!_T("Target address is null."));
-		return false;
-	}
-
-	if (pSource == nullptr)
-	{
-		_ASSERTE(!_T("Source address is null."));
-		return false;
-	}
-
-	if (Size == 0)
-	{
-		_ASSERTE(!_T("Source size is null."));
-		return false;
-	}
-
-	if (IsBadReadPtr(pSource, Size))
-	{
-		_ASSERTE(!_T("Source is unreadable."));
-		return false;
-	}
-
-
-	// Modify protection attributes of the target memory page 
-
-	uint32_t OldProtect = 0;
-
-	if (!VirtualProtect(pTarget, Size, PAGE_EXECUTE_READWRITE, LPDWORD(&OldProtect)))
-	{
-		ErrCode = GetLastError();
-		_ASSERTE(!_T("VirtualProtect() failed."));
-		return false;
-	}
-
-
-	// Write memory 
-
-	memcpy(pTarget, pSource, Size);
-
-
-	// Restore memory protection attributes of the target memory page 
-
-	uint32_t Temp = 0;
-
-	if (!VirtualProtect(pTarget, Size, OldProtect, LPDWORD(&Temp)))
-	{
-		ErrCode = GetLastError();
-		_ASSERTE(!_T("VirtualProtect() failed."));
-		return false;
-	}
-
-
-	// Success 
-
-	return true;
-
-}
-
-
-bool Win32App::EnforceFilter(bool bEnforce)
-{
-	uint32_t ErrCode = 0;
-
-
-	// Obtain the address of SetUnhandledExceptionFilter 
-
-	HMODULE hLib = GetModuleHandle(_T("kernel32.dll"));
-
-	if (hLib == nullptr)
-	{
-		ErrCode = GetLastError();
-		_ASSERTE(!_T("GetModuleHandle(kernel32.dll) failed."));
-		return false;
-	}
-
-	uint8_t* pTarget = (uint8_t*)GetProcAddress(hLib, "SetUnhandledExceptionFilter");
-
-	if (pTarget == nullptr)
-	{
-		ErrCode = GetLastError();
-		_ASSERTE(!_T("GetProcAddress(SetUnhandledExceptionFilter) failed."));
-		return false;
-	}
-
-	if (IsBadReadPtr(pTarget, sizeof(OriginalBytes)))
-	{
-		_ASSERTE(!_T("Target is unreadable."));
-		return false;
-	}
-
-
-	if (bEnforce)
-	{
-		// Save the original contents of SetUnhandledExceptionFilter 
-
-		memcpy(OriginalBytes, pTarget, sizeof(OriginalBytes));
-
-
-		// Patch SetUnhandledExceptionFilter 
-
-		if (!WriteMemory(pTarget, PatchBytes, sizeof(PatchBytes)))
-			return false;
-
-	}
-	else
-	{
-		// Restore the original behavior of SetUnhandledExceptionFilter 
-
-		if (!WriteMemory(pTarget, OriginalBytes, sizeof(OriginalBytes)))
-			return false;
-
-	}
-
-
-	// Success 
-
-	return true;
-
 }
 
 //////////////////////////////////////////////////////////////////////////////

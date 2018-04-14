@@ -22,7 +22,7 @@
 #include "..\Club\ClubMessages.h"
 #include "AutoDownload.h"
 
-#include "AllegianceSecurity.h" // BT - STEAM						 
+//BBT #include "AllegianceSecurity.h" // BT - STEAM						 
 #ifdef USEAUTH
 #include "zauth.h"
 #endif

@@ -27,15 +27,20 @@
 /* TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE     */
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
+_CRTIMP __checkReturn unsigned long __cdecl strtoul(__in_z const char * _Str, __deref_opt_out_z char ** _EndPtr, __in int _Radix);
 
 //unsigned long int strtoul(const char * ptr,
 //	char ** endptr,
 //	int base);
 
-//BBT placed here for convenience
-unsigned long long strtoull(const char * ptr,
-	char ** endptr,
+unsigned long long int strtoull(const char* str,
+	char** endptr,
 	int base);
+
+//BBT placed here for convenience
+//unsigned long long strtoull(const char * ptr,
+//	char ** endptr,
+//	int base);
 
 //unsigned long long strtoull_simple2(const char *s) {
 //	unsigned sumu = 0;
