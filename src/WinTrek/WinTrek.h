@@ -18,6 +18,11 @@
 #ifndef _WINTREK_
 #define _WINTREK_
 
+ // BT - 10/17 - Work-around for backwards compatibility with delayimp.h and the Windows XP targeting pack for VS2017.
+#ifndef FACILITY_VISUALCPP
+	#define FACILITY_VISUALCPP  ((LONG)0x6d)
+#endif
+
 #include "treki.h"
 
 extern bool g_bActivity; //Imago: AFK from Activity flag

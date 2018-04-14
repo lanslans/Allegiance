@@ -42,14 +42,14 @@ public:
 
 // Implementation
 public:
-  HRESULT TCPersistStreamInit_Load(IStream* pStm, ATL_PROPMAP_ENTRY* pMap,
+  HRESULT TCPersistStreamInit_Load(IStream* pStm, const ATL_PROPMAP_ENTRY* pMap,
     void* pT, IUnknown* pUnk);
   HRESULT TCPersistStreamInit_Save(IStream* pStm, BOOL /* fClearDirty */,
-    ATL_PROPMAP_ENTRY* pMap, void* pT, IUnknown* pUnk);
+	  const ATL_PROPMAP_ENTRY* pMap, void* pT, IUnknown* pUnk);
   HRESULT TCPersistPropertyBag_Load(IPropertyBag* pPropBag,
-    LPERRORLOG pErrorLog, ATL_PROPMAP_ENTRY* pMap, void* pT, IUnknown* pUnk);
+    LPERRORLOG pErrorLog, const ATL_PROPMAP_ENTRY* pMap, void* pT, IUnknown* pUnk);
   HRESULT TCPersistPropertyBag_Save(IPropertyBag* pPropBag,
-    BOOL fClearDirty, BOOL fSaveAllProperties, ATL_PROPMAP_ENTRY* pMap,
+    BOOL fClearDirty, BOOL fSaveAllProperties, const ATL_PROPMAP_ENTRY* pMap,
     void* pT, IUnknown* pUnk);
   HRESULT ISpecifyPropertyPages_GetPages(CAUUID* pPages,
     ATL_PROPMAP_ENTRY* pMap);
@@ -579,7 +579,7 @@ STDMETHODIMP TCPersistPropertyBagImpl<T>::Load(IPropertyBag* pPropBag,
 {
   _TRACE0("IPersistPropertyBagImpl::Load\n");
   T* pT = static_cast<T*>(this);
-  ATL_PROPMAP_ENTRY* pMap = T::GetPropertyMap();
+  const ATL_PROPMAP_ENTRY* pMap = T::GetPropertyMap();
   ATLASSERT(pMap != NULL);
   return pT->TCPersistPropertyBag_Load(pPropBag, pErrorLog, pMap, pT,
     pT->GetUnknown());
@@ -591,7 +591,7 @@ STDMETHODIMP TCPersistPropertyBagImpl<T>::Save(IPropertyBag* pPropBag,
 {
   _TRACE0("IPersistPropertyBagImpl::Save\n");
   T* pT = static_cast<T*>(this);
-  ATL_PROPMAP_ENTRY* pMap = T::GetPropertyMap();
+  const ATL_PROPMAP_ENTRY* pMap = T::GetPropertyMap();
   ATLASSERT(pMap != NULL);
   return pT->TCPersistPropertyBag_Save(pPropBag, fClearDirty,
     fSaveAllProperties, pMap, pT, pT->GetUnknown());

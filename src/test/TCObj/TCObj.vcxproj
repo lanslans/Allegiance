@@ -22,17 +22,17 @@
     <ProjectGuid>{CAFFB3DB-EADD-46A1-ABAE-3A341011B0A6}</ProjectGuid>
     <RootNamespace>TCObj</RootNamespace>
     <Keyword>MakeFileProj</Keyword>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='FZRetail|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v80</PlatformToolset>
+    <PlatformToolset>v141_xp</PlatformToolset>
     <UseOfMfc>false</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='FZDebug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v80</PlatformToolset>
+    <PlatformToolset>v141_xp</PlatformToolset>
     <UseOfMfc>false</UseOfMfc>
     <UseOfAtl>Dynamic</UseOfAtl>
   </PropertyGroup>
@@ -81,14 +81,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='FZDebug|Win32'">
     <OutDir>.\..\..\..\objs\$(Configuration)\Test\TCObj\</OutDir>
     <IntDir>.\..\..\..\objs\$(Configuration)\Test\TCObj\</IntDir>
-    <IncludePath>C:\Program Files (x86)\Microsoft DirectX SDK (August 2007)\Include;C:\Program Files (x86)\Microsoft SDKs\Windows\v5.0\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Program Files (x86)\Microsoft DirectX SDK (August 2007)\Lib\x86;C:\Program Files (x86)\Microsoft SDKs\Windows\v5.0\Lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include;C:\Program Files (x86)\Microsoft DirectX SDK (August 2007)\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Lib;C:\Program Files (x86)\Microsoft DirectX SDK (August 2007)\Lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='FZRetail|Win32'">
     <OutDir>.\..\..\..\objs\$(Configuration)\Test\TCObj\</OutDir>
     <IntDir>.\..\..\..\objs\$(Configuration)\Test\TCObj\</IntDir>
-    <IncludePath>C:\Program Files (x86)\Microsoft DirectX SDK (August 2007)\Include;C:\Program Files (x86)\Microsoft SDKs\Windows\v5.0\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Program Files (x86)\Microsoft DirectX SDK (August 2007)\Lib\x86;C:\Program Files (x86)\Microsoft SDKs\Windows\v5.0\Lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include;C:\Program Files (x86)\Microsoft DirectX SDK (August 2007)\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Lib;C:\Program Files (x86)\Microsoft DirectX SDK (August 2007)\Lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Retail|Win32'">
     <Midl>
@@ -96,7 +96,8 @@
       <GenerateTypeLibrary>true</GenerateTypeLibrary>
       <TypeLibraryName />
       <OutputDirectory>$(OutDir)</OutputDirectory>
-      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <HeaderFileName>%(Filename)_dlldataX.h</HeaderFileName>
+	  <DllDataFileName>%(Filename)_dlldataX.c</DllDataFileName>
     </Midl>
     <ClCompile>
       <InlineFunctionExpansion>Default</InlineFunctionExpansion>
@@ -123,7 +124,8 @@
       <GenerateTypeLibrary>true</GenerateTypeLibrary>
       <TypeLibraryName>$(TargetDir)\TCObj.tlb</TypeLibraryName>
       <OutputDirectory>$(OutDir)</OutputDirectory>
-      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <HeaderFileName>%(Filename)_dlldataX.h</HeaderFileName>
+	  <DllDataFileName>%(Filename)_dlldataX.c</DllDataFileName>
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
@@ -150,7 +152,8 @@
       <GenerateTypeLibrary>true</GenerateTypeLibrary>
       <TypeLibraryName>$(TargetDir)\TCObj.tlb</TypeLibraryName>
       <OutputDirectory>$(OutDir)</OutputDirectory>
-      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <HeaderFileName>%(Filename)_dlldataX.h</HeaderFileName>
+	  <DllDataFileName>%(Filename)_dlldataX.c</DllDataFileName>
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
@@ -181,7 +184,8 @@
       <GenerateTypeLibrary>true</GenerateTypeLibrary>
       <TypeLibraryName />
       <OutputDirectory>$(OutDir)</OutputDirectory>
-      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <HeaderFileName>%(Filename)v.h</HeaderFileName>
+	  <DllDataFileName>%(Filename)_dlldataX.c</DllDataFileName>
     </Midl>
     <ClCompile>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>

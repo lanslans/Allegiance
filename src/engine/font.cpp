@@ -190,9 +190,9 @@ private:
             SIZE size;
             unsigned char ch = index;
 
-            ZVerify(::GetTextExtentPoint(
+            ZVerify(::GetTextExtentPointW(
                 hdc,
-                (PCC)&ch,
+                (LPCWSTR)&ch,
                 1,
                 &size
             ));

@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27428.2015
+VisualStudioVersion = 15.0.27130.2020
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A20534F2-783B-48FF-95FE-FCEC104F86EA}"
 	ProjectSection(SolutionItems) = preProject
@@ -135,9 +135,7 @@ Global
 		{F150276A-D7D8-4C24-AA41-170A6F3D4CF9}.FZDebug|Win32.ActiveCfg = FZDebug|Win32
 		{F150276A-D7D8-4C24-AA41-170A6F3D4CF9}.FZRetail|Win32.ActiveCfg = FZRetail|Win32
 		{97B8370B-16BC-4A2F-A0FE-4BEEF2EAED42}.FZDebug|Win32.ActiveCfg = FZDebug|Win32
-		{97B8370B-16BC-4A2F-A0FE-4BEEF2EAED42}.FZDebug|Win32.Build.0 = FZDebug|Win32
 		{97B8370B-16BC-4A2F-A0FE-4BEEF2EAED42}.FZRetail|Win32.ActiveCfg = FZRetail|Win32
-		{97B8370B-16BC-4A2F-A0FE-4BEEF2EAED42}.FZRetail|Win32.Build.0 = FZRetail|Win32
 		{7260A2F7-7D40-4D00-9C3A-846939CF16CD}.FZDebug|Win32.ActiveCfg = FZDebug|Win32
 		{7260A2F7-7D40-4D00-9C3A-846939CF16CD}.FZDebug|Win32.Build.0 = FZDebug|Win32
 		{7260A2F7-7D40-4D00-9C3A-846939CF16CD}.FZRetail|Win32.ActiveCfg = FZRetail|Win32

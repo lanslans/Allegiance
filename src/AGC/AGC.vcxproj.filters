@@ -246,10 +246,6 @@
     <ClInclude Include="TCUtility.h" />
   </ItemGroup>
   <ItemGroup>
-    <Midl Include="agc.idl" />
-    <Midl Include="..\Inc\AGCIDL.idl" />
-  </ItemGroup>
-  <ItemGroup>
     <CustomBuild Include="AGCEvents.xml">
       <Filter>AGCEvents</Filter>
     </CustomBuild>
