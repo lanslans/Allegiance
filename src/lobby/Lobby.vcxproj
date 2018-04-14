@@ -155,13 +155,19 @@
       <AdditionalIncludeDirectories>..\Inc;$(OutDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>odbc32.lib;odbccp32.lib;$(OutDir)..\_utility\Utility.lib;$(OutDir)..\zlib\zlib.lib;$(OutDir)..\test\TCLib\TCLib.lib;$(OutDir)..\sharemem\sharemem.lib;$(OutDir)..\Guids\Guids.lib;urlmon.lib;dxguid.lib;winmm.lib;amstrmid.lib;comctl32.lib;version.lib;ws2_32.lib;delayimp.lib;wininet.lib;lz32.lib;netapi32.lib;comsupp.lib;oledb.lib;appWeb.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\Lib\AllegianceSecurity\AllegianceSecurityd.lib;..\Lib\Steam\steam_api.lib;odbc32.lib;odbccp32.lib;$(OutDir)..\_utility\Utility.lib;$(OutDir)..\zlib\zlib.lib;$(OutDir)..\test\TCLib\TCLib.lib;$(OutDir)..\sharemem\sharemem.lib;$(OutDir)..\Guids\Guids.lib;urlmon.lib;dxguid.lib;winmm.lib;amstrmid.lib;comctl32.lib;version.lib;ws2_32.lib;delayimp.lib;wininet.lib;lz32.lib;netapi32.lib;comsupp.lib;oledb.lib;appWeb.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)AllLobby.exe</OutputFile>
       <AdditionalLibraryDirectories>..\Inc\appWeb;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <GenerateMapFile>true</GenerateMapFile>
       <TargetMachine>MachineX86</TargetMachine>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
+    <PostBuildEvent>
+      <Command>
+xcopy $(ProjectDir)..\lib\steam\steam_api.dll $(OutDir) /s /d /y
+xcopy $(ProjectDir)..\Inc\steam_appid.txt $(OutDir) /s /d /y</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='FZRetail|Win32'">
     <ClCompile>
@@ -180,13 +186,19 @@
       <AdditionalIncludeDirectories>..\Inc;$(OutDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>odbc32.lib;odbccp32.lib;$(OutDir)..\_utility\Utility.lib;$(OutDir)..\zlib\zlib.lib;$(OutDir)..\test\TCLib\TCLib.lib;$(OutDir)..\sharemem\sharemem.lib;$(OutDir)..\Guids\Guids.lib;urlmon.lib;dxguid.lib;winmm.lib;amstrmid.lib;comctl32.lib;version.lib;ws2_32.lib;delayimp.lib;wininet.lib;lz32.lib;netapi32.lib;comsupp.lib;oledb.lib;appWeb.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\Lib\AllegianceSecurity\AllegianceSecurity.lib;..\Lib\Steam\steam_api.lib;odbc32.lib;odbccp32.lib;$(OutDir)..\_utility\Utility.lib;$(OutDir)..\zlib\zlib.lib;$(OutDir)..\test\TCLib\TCLib.lib;$(OutDir)..\sharemem\sharemem.lib;$(OutDir)..\Guids\Guids.lib;urlmon.lib;dxguid.lib;winmm.lib;amstrmid.lib;comctl32.lib;version.lib;ws2_32.lib;delayimp.lib;wininet.lib;lz32.lib;netapi32.lib;comsupp.lib;oledb.lib;appWeb.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)AllLobby.exe</OutputFile>
       <AdditionalLibraryDirectories>..\Inc\appWeb;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries>LIBCMT.lib;MSVCRTD.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <TargetMachine>MachineX86</TargetMachine>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
+    <PostBuildEvent>
+      <Command>
+xcopy $(ProjectDir)..\lib\steam\steam_api.dll $(OutDir) /s /d /y
+xcopy $(ProjectDir)..\Inc\steam_appid.txt $(OutDir) /s /d /y</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ProjectReference Include="..\guids\Guids.vcxproj">

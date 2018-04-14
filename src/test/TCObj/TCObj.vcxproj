@@ -97,7 +97,7 @@
       <TypeLibraryName />
       <OutputDirectory>$(OutDir)</OutputDirectory>
       <HeaderFileName>%(Filename)_dlldataX.h</HeaderFileName>
-	  <DllDataFileName>%(Filename)_dlldataX.c</DllDataFileName>
+      <DllDataFileName>%(Filename)_dlldataX.c</DllDataFileName>
     </Midl>
     <ClCompile>
       <InlineFunctionExpansion>Default</InlineFunctionExpansion>
@@ -125,7 +125,7 @@
       <TypeLibraryName>$(TargetDir)\TCObj.tlb</TypeLibraryName>
       <OutputDirectory>$(OutDir)</OutputDirectory>
       <HeaderFileName>%(Filename)_dlldataX.h</HeaderFileName>
-	  <DllDataFileName>%(Filename)_dlldataX.c</DllDataFileName>
+      <DllDataFileName>%(Filename)_dlldataX.c</DllDataFileName>
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
@@ -153,7 +153,7 @@
       <TypeLibraryName>$(TargetDir)\TCObj.tlb</TypeLibraryName>
       <OutputDirectory>$(OutDir)</OutputDirectory>
       <HeaderFileName>%(Filename)_dlldataX.h</HeaderFileName>
-	  <DllDataFileName>%(Filename)_dlldataX.c</DllDataFileName>
+      <DllDataFileName>%(Filename)_dlldataX.c</DllDataFileName>
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
@@ -175,7 +175,7 @@
       <AdditionalIncludeDirectories>$(OutDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>$(OutDir)..\..\ZLib\ZLib.lib;$(OutDir)..\TCLib\TCLib.lib;winmm.lib;delayimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\..\Lib\AllegianceSecurity\AllegianceSecurityd.lib;..\..\Lib\Steam\steam_api.lib;$(OutDir)..\..\ZLib\ZLib.lib;$(OutDir)..\TCLib\TCLib.lib;winmm.lib;delayimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='FZRetail|Win32'">
@@ -185,7 +185,7 @@
       <TypeLibraryName />
       <OutputDirectory>$(OutDir)</OutputDirectory>
       <HeaderFileName>%(Filename)v.h</HeaderFileName>
-	  <DllDataFileName>%(Filename)_dlldataX.c</DllDataFileName>
+      <DllDataFileName>%(Filename)_dlldataX.c</DllDataFileName>
     </Midl>
     <ClCompile>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -203,7 +203,7 @@
       <AdditionalIncludeDirectories>$(OutDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>$(OutDir)..\..\ZLib\ZLib.lib;$(OutDir)..\TCLib\TCLib.lib;winmm.lib;delayimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\..\Lib\AllegianceSecurity\AllegianceSecurityd.lib;..\..\Lib\Steam\steam_api.lib;$(OutDir)..\..\ZLib\ZLib.lib;$(OutDir)..\TCLib\TCLib.lib;winmm.lib;delayimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>LIBCMT.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
