@@ -259,3 +259,12 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
+
+#Allegiance extra files and dirs
+*.tlog
+*.bak
+*.old
+
+objs14/
+objsv141/
+objsv141_xp/
