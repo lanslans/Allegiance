@@ -152,7 +152,7 @@
       <GenerateTypeLibrary>true</GenerateTypeLibrary>
       <TypeLibraryName>$(TargetDir)\TCObj.tlb</TypeLibraryName>
       <OutputDirectory>$(OutDir)</OutputDirectory>
-      <HeaderFileName>%(Filename)_dlldataX.h</HeaderFileName>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
       <DllDataFileName>%(Filename)_dlldataX.c</DllDataFileName>
     </Midl>
     <ClCompile>
@@ -184,7 +184,7 @@
       <GenerateTypeLibrary>true</GenerateTypeLibrary>
       <TypeLibraryName />
       <OutputDirectory>$(OutDir)</OutputDirectory>
-      <HeaderFileName>%(Filename)v.h</HeaderFileName>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
       <DllDataFileName>%(Filename)_dlldataX.c</DllDataFileName>
     </Midl>
     <ClCompile>
@@ -227,8 +227,14 @@
   </ItemGroup>
   <ItemGroup>
     <Midl Include="..\Inc\ScrRun.idl" />
-    <Midl Include="..\Inc\TCIDL.idl" />
-    <Midl Include="TCObj.idl" />
+    <Midl Include="..\Inc\TCIDL.idl">
+      <HeaderFileName Condition="'$(Configuration)|$(Platform)'=='FZRetail|Win32'">%(Filename).h</HeaderFileName>
+      <HeaderFileName Condition="'$(Configuration)|$(Platform)'=='FZDebug|Win32'">%(Filename).h</HeaderFileName>
+    </Midl>
+    <Midl Include="TCObj.idl">
+      <HeaderFileName Condition="'$(Configuration)|$(Platform)'=='FZDebug|Win32'">%(Filename).h</HeaderFileName>
+      <HeaderFileName Condition="'$(Configuration)|$(Platform)'=='FZRetail|Win32'">%(Filename).h</HeaderFileName>
+    </Midl>
   </ItemGroup>
   <ItemGroup>
     <None Include="TCMarshalByValue.rgs" />
