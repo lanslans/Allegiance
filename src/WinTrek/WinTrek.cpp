@@ -7289,8 +7289,7 @@ public:
                       float dt,
                       bool  activeControlsF)
     {
-		// BT - STEAM
-		SteamAPI_RunCallbacks();
+		
 		// - Imago: Only set AFK from inactivity when logged on
 		if (trekClient.m_fLoggedOn) {
 			Time timeLastMouseMove;
