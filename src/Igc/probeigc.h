@@ -12,7 +12,7 @@
 **  History:
 */
 // probeIGC.h : Declaration of the CprobeIGC
-
+#include "..\Inc\nullptr_emulation.h"
 #ifndef __PROBEIGC_H_
 #define __PROBEIGC_H_
 
@@ -72,7 +72,7 @@ class CprobeIGC : public TmodelIGC<IprobeIGC>
 
             if (launcher &&
                 (!GetMyMission()->GetMissionParams()->bAllowFriendlyFire) &&
-                (pside == launcher->GetSide()) &&
+				((pside == launcher->GetSide()) || IsideIGC::AlliedSides(pside, launcher->GetSide())) && // #ALLY was: pside == launcher->GetSide()
                 (amount >= 0.0f) &&
                 !m_probeType->HasCapability(c_eabmRescueAny))
             {
@@ -80,9 +80,11 @@ class CprobeIGC : public TmodelIGC<IprobeIGC>
 				// make this experimental for now for testing
 				// Only damage 'sensor' probes (ICE projectile type = -1) and not other types of probes like towers
 
-				if ( (!(GetMyMission()->GetMissionParams()->bExperimental)) || (m_probeType->GetProjectileType() != NULL) )
+				//Xynth #98 if ( (!(GetMyMission()->GetMissionParams()->bExperimental)) || (m_probeType->GetProjectileType() != NULL) )
 				// end mmf
-                  return c_drNoDamage;
+                //Xynth #98 Allow friendly probes to be damaged
+				if (m_probeType->GetProjectileType() != NULL) 
+					return c_drNoDamage;
             }
 
             DamageResult    dr = c_drHullDamage;
@@ -113,6 +115,21 @@ class CprobeIGC : public TmodelIGC<IprobeIGC>
 
                     if (oldFraction > 0.0f)
                     {
+						//Xynth Set flag in IGC ship to later trigger an achievement for destroying a probe
+						if (launcher != nullptr && launcher->GetObjectType() == OT_ship)
+						{
+							ObjectID theID = launcher->GetObjectID();
+							IsideIGC * plSide = launcher->GetSide();
+
+							if (plSide != nullptr)
+							{
+								IshipIGC * pShip = plSide->GetShip(theID);
+
+								if (pShip != nullptr && pside != nullptr && !((pside == launcher->GetSide()) || IsideIGC::AlliedSides(pside, launcher->GetSide())))
+									pShip->SetAchievementMask(c_achmProbeKill); //Xynth for enemy probe kill achievement
+							}
+						}
+						
                         GetMyMission()->GetIgcSite()->KillProbeEvent(this);
                         dr = c_drKilled;
                     }
@@ -257,6 +274,20 @@ class CprobeIGC : public TmodelIGC<IprobeIGC>
 
             return f;
         }
+		
+		//Xynth - 7/3/10 adding function to set expiration time ticket #10
+		virtual void				SetExpiration(Time time)
+		{
+			m_timeExpire = time;
+		}
+		//Xynth end new expiration function
+		
+		virtual IshipIGC * GetProbeLauncherShip() const
+		//Xynth new function to identify who deployed the probe
+		{
+			return m_launcher;
+		}
+
 
     private:
         void ValidTarget(ImodelIGC*  pmodel,
@@ -300,7 +331,8 @@ class CprobeIGC : public TmodelIGC<IprobeIGC>
 
         ProbeID             m_probeID;
         bool                m_bSeenByAll;
-        bool                m_bCreateNow;
+        bool                m_bCreateNow;		
+		
 };
 
 #endif //__PROBEIGC_H_

@@ -16,6 +16,8 @@
 #ifndef __SIDEIGC_H_
 #define __SIDEIGC_H_
 
+#include "color.h"
+
 /////////////////////////////////////////////////////////////////////////////
 // CsideIGC
 class       CsideIGC : public IsideIGC
@@ -105,7 +107,13 @@ class       CsideIGC : public IsideIGC
 
         void                SetName(const char* newVal)
         {
-            UTL::putName(m_data.name, newVal);
+			//Rock / Imago 7/28/09
+			ZString strName = newVal;
+			int istart = strName.ReverseFind("\x81");
+			int iend = strName.ReverseFind("\x82");
+			if ( (istart != -1 && iend == -1) || iend < istart)
+				strName += END_COLOR_STRING;
+			UTL::putName(m_data.name, (PCC)strName);
         }
 
         virtual const char*             GetName(void) const
@@ -491,6 +499,29 @@ class       CsideIGC : public IsideIGC
         {
             m_data.nBaseCaptures++;
         }
+		bool GetRandomCivilization(void) const
+		{
+			return bRandomCivilization;
+		}
+		void SetRandomCivilization(bool rand)
+		{
+			bRandomCivilization = rand;
+		}
+		
+		//Xynth add funtion to set number of players on a side
+		int CsideIGC::GetNumPlayersOnSide(void) const
+		{
+			int toReturn = 0;
+			for (ShipLinkIGC* psl = m_ships.first(); psl != NULL; psl = psl->next())
+			{
+				IshipIGC*    ps = psl->data();
+				if (ps->GetPilotType() == c_ptPlayer)
+					toReturn++;
+			}
+
+			return toReturn;
+
+		}
 
         unsigned char GetConquestPercent(void) const
         {
@@ -552,6 +583,16 @@ class       CsideIGC : public IsideIGC
             m_data.conquest = 0;
         }
 
+		// #ALLY
+		void SetAllies(char allies)
+		{
+			m_data.allies = allies;
+		}
+		char GetAllies()
+		{
+			return m_data.allies;
+		}
+		
     private:
         void    AdjustBuckets(void)
         {
@@ -636,7 +677,8 @@ class       CsideIGC : public IsideIGC
 
         Time                m_lastUpdate;
 
-        bool                m_activeF;
+        bool                m_activeF;		
+		bool bRandomCivilization;  //Xynth #170 8/10
 };
 
 #endif //__SIDEIGC_H_

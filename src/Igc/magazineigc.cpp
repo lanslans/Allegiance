@@ -40,12 +40,14 @@ HRESULT     CmagazineIGC::Initialize(ImissionIGC* pMission, Time now, const void
     {
         m_partType = (IlauncherTypeIGC*)(((DataPartIGC*)data)->partType);
         assert (m_partType);
-        m_partType->AddRef();
+        if (m_partType) //Xynth for good meaure
+			m_partType->AddRef();
 
         m_missileType = (ImissileTypeIGC*)(m_partType->GetExpendableType());
         assert (m_missileType);
         assert (m_missileType->GetObjectType() == OT_missileType);
-        m_missileType->AddRef();
+        if (m_missileType) //Xynth Fix for error 8986029
+			m_missileType->AddRef();
         m_amount = 0;
     }
 
@@ -124,7 +126,7 @@ void        CmagazineIGC::Update(Time   now)
             else
             {
                 if (ptarget && (ptarget->GetCluster() == m_ship->GetCluster()) &&   //have a target,
-                    (ptarget->GetSide() != m_ship->GetSide()) &&                    //and on different sides,
+                    ((ptarget->GetSide() != m_ship->GetSide()) && (!IsideIGC::AlliedSides(ptarget->GetSide(),m_ship->GetSide()))) &&  //and not on friendly sides #ALLY mmf 11/08 added !   IMAGO FIXED 7/8/09
                     (m_missileType->HasCapability(c_eabmWarpBomb)                   //is a warp bomb
                      ? (ptarget->GetObjectType() == OT_warp)                        //and target is a warp
                      : (ptarget->GetAttributes() & c_mtDamagable)) &&               //is not a warp bomb and we can do damage to it

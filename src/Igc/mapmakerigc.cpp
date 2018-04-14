@@ -17,6 +17,7 @@
 //
 // Static members.
 // 08/30/04 -KGJV: added Titty Baby memorial sector name
+// 12/14/11 -pkk: added Tj Butler memorial sector name
 const char * CMapData::smszClusterName[c_NumClusterNames] =
 {
     "Aegis",        "Aeroflex",     "Ahto",         "Aredne",
@@ -35,7 +36,7 @@ const char * CMapData::smszClusterName[c_NumClusterNames] =
     "Raiko",        "Resnik",       "Rib'zki",		"Rimin",  "Sleipener",
     "Solitaire",    "Soron",        "Sri Metsa",    "Surma",
     "Tathlum",      "Tierankeen",   "Tjeerd",       "Torc",
-    "Touni",        "Tauceti",      "Titty Baby"    ,"Turakeen",   /*"Uranus",*/"Udar", "Virkinow",
+    "Touni",        "Tauceti",      "Tj Butler",    "Titty Baby"    ,"Turakeen",   /*"Uranus",*/"Udar", "Virkinow",
   /*"Venus",*/      "Xuping"
 } ;
 
@@ -468,6 +469,9 @@ VOID CmapMakerIGC::GenerateMission(Time now,
     //
     if (TRUE == pmp->bShowHomeSector)
         this->RevealHomeClusters(pMission);
+
+    if (TRUE == pmp->bAllowAlliedViz)
+        this->RevealAlliedClusters(pMission);
 
     if (TRUE == pmp->bShowMap)
         this->RevealMap(pMission);
@@ -964,31 +968,32 @@ VOID CmapMakerIGC::PopulateClusters(CMapData* pMapData)
 
 VOID CmapMakerIGC::RevealHomeClusters(ImissionIGC * pMission)
 {
-    //
-    // Show every side everything about its home
-    //
-    for (SideLinkIGC * psl = pMission->GetSides()->first();
-        (psl != NULL);
-        psl = psl->next())
-    {
-        IsideIGC*   pside = psl->data();
 
-        for (StationLinkIGC * pstnl = pside->GetStations()->first();
-            (pstnl != NULL);
-            pstnl = pstnl->next())
-        {
-            //
-            // Make every model in the station's cluster visible to the side
-            //
-            for (ModelLinkIGC * pml =
-                    pstnl->data()->GetCluster()->GetModels()->first();
-                (pml != NULL);
-                pml = pml->next())
-            {
-                pml->data()->SetSideVisibility(pside, true);
-            }
-        }
-    }
+	    //
+	    // Show every side everything about its home
+	    //
+	    for (SideLinkIGC * psl = pMission->GetSides()->first();
+	        (psl != NULL);
+	        psl = psl->next())
+	    {
+	        IsideIGC*   pside = psl->data();
+
+	        for (StationLinkIGC * pstnl = pside->GetStations()->first();
+	            (pstnl != NULL);
+	            pstnl = pstnl->next())
+			{
+	            //
+	            // Make every model in the station's cluster visible to the side
+	            //
+	            for (ModelLinkIGC * pml =
+	                    pstnl->data()->GetCluster()->GetModels()->first();
+	                (pml != NULL);
+	                pml = pml->next())
+	            {
+	                pml->data()->SetSideVisibility(pside, true);
+	            }
+	        }
+	    }
 }
 
 VOID CmapMakerIGC::RevealMap(ImissionIGC * pMission)
@@ -1007,8 +1012,49 @@ VOID CmapMakerIGC::RevealMap(ImissionIGC * pMission)
             psl = psl->next())
         {
             pwarp->SetSideVisibility(psl->data(), true);
+
         }
     }
+}
+
+VOID CmapMakerIGC::RevealAlliedClusters(ImissionIGC * pMission)
+{
+    //
+    // Show every ally everything about thier home
+    //
+	    for (SideLinkIGC * psl = pMission->GetSides()->first();
+	        (psl != NULL);
+	        psl = psl->next())
+	    {
+	        IsideIGC*   pside = psl->data();
+
+	        for (StationLinkIGC * pstnl = pside->GetStations()->first();
+	            (pstnl != NULL);
+	            pstnl = pstnl->next())
+			{
+	            //
+	            // Make every model in the station's cluster visible to the allies
+	            //
+	            for (ModelLinkIGC * pml =
+	                    pstnl->data()->GetCluster()->GetModels()->first();
+	                (pml != NULL);
+	                pml = pml->next())
+	            {								
+					
+					//lets get a list of allied sideIDs
+				    for (SideLinkIGC* psidelink = pMission->GetSides()->first();
+						(psidelink != NULL);
+						psidelink = psidelink->next())
+					{
+						IsideIGC*   otherside = psidelink->data();
+						//this side is ally...and not ours or an aleph (alephs must be replicated)
+						if (pside->AlliedSides(otherside,pside) && otherside != pside && pml->data()->GetObjectType() != OT_warp) {
+							pml->data()->SetSideVisibility(otherside, true);
+						}
+					}
+	            }
+	        }
+	    }
 }
 
 VOID CmapMakerIGC::ActivateSides(ImissionIGC * pMission)

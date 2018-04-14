@@ -76,6 +76,7 @@ class       MyStationType : public IstationTypeIGC
         virtual const char*             GetBuilderName(void) const;
         virtual const char*             GetIconName(void) const;
         virtual IstationTypeIGC*        GetSuccessorStationType(const IsideIGC*   pside);
+		virtual IstationTypeIGC*		GetDirectSuccessorStationType(void);
         virtual AsteroidAbilityBitMask  GetBuildAABM(void) const;
 
         virtual int                     GetLaunchSlots(void) const;
@@ -142,8 +143,16 @@ class       CstationIGC : public TmodelIGC<IstationIGC>
         :
             m_myStationType(this),
             m_hullFraction(1.0f),
-            m_shieldFraction(0.0f)
+            m_shieldFraction(0.0f),
+			//Imago #121 7/10
+			m_roidID(NA),
+			m_roidSig(0.0f),
+			m_roidRadius(0.0f),
+			m_roidAabm(0)
         {
+			m_roidPos = Vector(0.0f,0.0f,0.0f);
+			ZeroMemory(&m_roidSides,sizeof(bool) * c_cSidesMax);
+			//end Imago
         }
 
         /*
@@ -422,6 +431,17 @@ class       CstationIGC : public TmodelIGC<IstationIGC>
             return pSuccessor;                   
         }
 
+		//Imago 6/10 #14
+        virtual Time                    GetLastUpdate(void) const
+        {
+            return m_lastLaunch;
+        }
+
+        virtual void                    SetLastUpdate(Time now)
+        {
+            m_lastLaunch = now;
+        }
+
         virtual IpartTypeIGC*           GetSimilarPart(IpartTypeIGC* ppt) const
         {
             //Walk through the predecessor parts until one is found that can be bought
@@ -458,6 +478,58 @@ class       CstationIGC : public TmodelIGC<IstationIGC>
         {
             return m_timeLastDamageReport;
         }
+		//Imago 6/10 #14
+        virtual void                    SetLastLaunch(Time timeLastLaunch)
+        {
+           m_lastLaunch = timeLastLaunch;
+        }
+        virtual Time                   GetLastLaunch(void) const
+        {
+            return m_lastLaunch;
+        }
+		//
+		//Imago #121 7/10
+		virtual ObjectID GetRoidID() const {
+			return m_roidID;
+		}
+		virtual void SetRoidID(ObjectID id) {
+			m_roidID = id;
+		}
+
+		virtual Vector					GetRoidPos() const {
+			return m_roidPos;
+		}
+		virtual void SetRoidPos(Vector pos) {
+			m_roidPos = pos;
+		}
+
+		virtual float					GetRoidSig() const {
+			return m_roidSig;
+		}
+		virtual void SetRoidSig(float Sig) {
+			m_roidSig = Sig;
+		}
+
+		virtual float					GetRoidRadius() const {
+			return m_roidRadius;
+		}
+		virtual void SetRoidRadius(float Radius) {
+			m_roidRadius = Radius;
+		}
+		
+		virtual AsteroidAbilityBitMask	GetRoidCaps() const {
+			return m_roidAabm;
+		}
+		virtual void SetRoidCaps(AsteroidAbilityBitMask aabm) {
+			m_roidAabm = aabm;
+		}
+		virtual void SetRoidSide(SideID sid, bool bset = true) {
+			m_roidSides[sid] = bset;
+		}
+		virtual bool GetRoidSide(SideID sid) {
+			return (m_roidSides[sid]);
+		}
+ 		//
 
         virtual SoundID                 GetInteriorSound() const
         {
@@ -480,6 +552,14 @@ class       CstationIGC : public TmodelIGC<IstationIGC>
         ShipListIGC                 m_shipsDocked;
         StationID                   m_stationID;
         unsigned char               m_undockPosition;
+		Time						m_lastLaunch; //Imago 6/10 #16
+		 //Imago #121 7/10 #120 8/10
+		ObjectID					m_roidID;
+		float						m_roidSig;
+		float						m_roidRadius;
+		Vector						m_roidPos;
+		AsteroidAbilityBitMask		m_roidAabm;
+		bool						m_roidSides[c_cSidesMax];
 };
 
 #endif //__STATIONIGC_H_

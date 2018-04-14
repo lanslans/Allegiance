@@ -249,6 +249,7 @@
       <IgnoreSpecificDefaultLibraries>LIBCMT.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <ModuleDefinitionFile>AGC.def</ModuleDefinitionFile>
       <TargetMachine>MachineX86</TargetMachine>
+      <RandomizedBaseAddress />
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

@@ -321,6 +321,10 @@ class CbuildingEffectIGC : public TmodelIGC<IbuildingEffectIGC>
                                                         m_pstationType->GetCompletionSound(), 
                                                         "Finished building %s", m_pstationType->GetName());
 
+				//Imago #120 #121 8/10
+				bool bseenside[c_cSidesMax] = {false};
+				GetMyMission()->GetSeenSides(GetMyMission()->GetModel(m_pshipBuilder->GetObjectType(),m_pshipBuilder->GetObjectID()),bseenside,GetMyMission()->GetModel(m_pasteroid->GetObjectType(),m_pasteroid->GetObjectID()));
+								
                 //Quietly kill the ship (after nuking its parts to prevent treasure from being created)
                 {
                     const PartListIGC*  parts = m_pshipBuilder->GetParts();
@@ -332,6 +336,7 @@ class CbuildingEffectIGC : public TmodelIGC<IbuildingEffectIGC>
                 m_pshipBuilder->SetFuel(0.0f);
 
                 m_pshipBuilder->SetStateM(0);
+
                 GetMyMission()->GetIgcSite()->KillShipEvent(now, m_pshipBuilder, NULL, 0.0f, m_pshipBuilder->GetPosition(), Vector::GetZero());
 
                 m_pshipBuilder = NULL;
@@ -343,7 +348,7 @@ class CbuildingEffectIGC : public TmodelIGC<IbuildingEffectIGC>
                 GetMyMission()->GetIgcSite()->BuildStation(pasteroid,
                                                            m_pside,
                                                            m_pstationType,
-                                                           now);
+                                                           now, bseenside); //Imago #121 - Selective pop rocks
             }
         }
 
