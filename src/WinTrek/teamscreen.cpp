@@ -458,11 +458,15 @@ private:
             // if they are on our team, draw the player's wing
             if (pplayer->SideID() == trekClient.GetSideID() && !bOnLobbySide)
             {
+				int wid = pplayer->GetShip()->GetWingID();
+				if (wid < 0)
+					 wid = 0;
+
                 psurface->DrawString(
                     TrekResources::SmallFont(),
                     color,
                     WinPoint(m_viColumns[4] + 2, 0), 
-                    c_pszWingName[pplayer->GetShip()->GetWingID()]
+                    c_pszWingName[wid]
                 );
             }
         }

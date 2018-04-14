@@ -2119,9 +2119,13 @@ HRESULT BaseClient::HandleMsg(FEDMESSAGE* pfm,
 
             if ((pship != m_ship) || pfmSW->bCommanded)
             {
-                pship->SetWingID(pfmSW->wingID);
+				int wid = pfmSW->wingID;
+				if (wid < 0)
+					 wid = 0;
+
+                pship->SetWingID(wid);
                 if (pfmSW->bCommanded && (pship == m_ship))
-                    PostText(true, "You have been assigned to wing %s", c_pszWingName[pfmSW->wingID]);
+                    PostText(true, "You have been assigned to wing %s", c_pszWingName[wid]);
             }
 
             m_pMissionInfo->GetSideInfo(pship->GetSide()->GetObjectID())->GetMembers().GetSink()();
