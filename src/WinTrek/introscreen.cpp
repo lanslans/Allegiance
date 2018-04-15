@@ -666,7 +666,7 @@ public:
             HKEY    hKey;
             DWORD   dwHasRunTraining = 0;
             DWORD   dwDataSize = sizeof (dwHasRunTraining);
-            if (ERROR_SUCCESS == RegOpenKeyEx (HKEY_LOCAL_MACHINE, ALLEGIANCE_REGISTRY_KEY_ROOT, 0, KEY_READ, &hKey)) 
+            if (ERROR_SUCCESS == RegOpenKeyEx (HKEY_CURRENT_USER, ALLEGIANCE_REGISTRY_KEY_ROOT, 0, KEY_READ, &hKey))
             {
                 RegQueryValueEx (hKey, "HasTrained", NULL, NULL, (LPBYTE) &dwHasRunTraining, &dwDataSize);
                 RegCloseKey(hKey);

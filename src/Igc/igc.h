@@ -2696,13 +2696,13 @@ struct  ExplosionData
 //
 enum ChatTarget // if you change this please update AGCChatTarget in AGCIDL.idl
 {
-    CHAT_EVERYONE = 0, CHAT_LEADERS, CHAT_ADMIN, CHAT_SHIP,
-    CHAT_ALLIES, //imago added allies 7/3/09 ALLY
-    CHAT_TEAM, CHAT_INDIVIDUAL, CHAT_INDIVIDUAL_NOFILTER, CHAT_WING, CHAT_INDIVIDUAL_ECHO,     //require objectID to be set
-    CHAT_ALL_SECTOR, CHAT_FRIENDLY_SECTOR,                      //ditto
-    CHAT_GROUP, CHAT_GROUP_NOECHO,                               //client only ... get translated into multiple sends
-    CHAT_NOSELECTION,
-    CHAT_MAX,
+	CHAT_EVERYONE = 0, CHAT_LEADERS, CHAT_ADMIN, CHAT_SHIP,
+	CHAT_ALLIES, //imago added allies 7/3/09 ALLY
+	CHAT_TEAM, CHAT_INDIVIDUAL, CHAT_INDIVIDUAL_NOFILTER, CHAT_WING, CHAT_INDIVIDUAL_ECHO,     //require objectID to be set
+	CHAT_ALL_SECTOR, CHAT_FRIENDLY_SECTOR,                      //ditto
+	CHAT_GROUP, CHAT_GROUP_NOECHO,                               //client only ... get translated into multiple sends
+	CHAT_NOSELECTION,
+	CHAT_MAX,
 };
 
 //Interfaces ....

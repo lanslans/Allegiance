@@ -1486,7 +1486,7 @@ public:
             && m_sideCurrent != trekClient.GetSideID());
 
 		m_pbuttonStart->SetHidden(false);
-        //m_pbuttonStart->SetHidden(!trekClient.MyPlayerInfo()->IsMissionOwner());
+        m_pbuttonStart->SetHidden(!trekClient.MyPlayerInfo()->IsMissionOwner());
     }
 
     void UpdateTitleText()
@@ -1695,8 +1695,8 @@ public:
                 {
                     m_ptextStatus->SetString("READY TO START");
                     m_ptextStatus2->SetString("");
-					bool autoStart = m_pMission->GetMissionParams().bAutoStart;
-					debugf("auto start: %i\n", autoStart == true ? 1 : 0);
+					/*bool autoStart = m_pMission->GetMissionParams().bAutoStart;
+					debugf("auto start: %i\n", autoStart == true ? 1 : 0);*/
                     m_pbuttonStart->SetEnabled(!m_pMission->GetMissionParams().bAutoStart);
                 }
                 else

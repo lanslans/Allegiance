@@ -1,6 +1,6 @@
 #include "pch.h"
 #include    <limits.h>
-
+#include "..\Inc\nullptr_emulation.h"
 //
 // Helper function for handling ship updates.
 //
@@ -2115,20 +2115,17 @@ HRESULT BaseClient::HandleMsg(FEDMESSAGE* pfm,
             CASTPFM(pfmSW, CS, SET_WINGID, pfm);
 
             IshipIGC*   pship = m_ship->GetSide()->GetShip(pfmSW->shipID);
-            assert (pship);
-
-            if ((pship != m_ship) || pfmSW->bCommanded)
-            {
-				int wid = pfmSW->wingID;
-				if (wid < 0)
-					 wid = 0;
-
-                pship->SetWingID(wid);
-                if (pfmSW->bCommanded && (pship == m_ship))
-                    PostText(true, "You have been assigned to wing %s", c_pszWingName[wid]);
-            }
-
-            m_pMissionInfo->GetSideInfo(pship->GetSide()->GetObjectID())->GetMembers().GetSink()();
+			if (pship != nullptr)
+			{
+				if ((pship != m_ship) || pfmSW->bCommanded)
+				{
+					pship->SetWingID(pfmSW->wingID);
+					if (pfmSW->bCommanded && (pship == m_ship))
+						PostText(true, "You have been assigned to wing %s", c_pszWingName[pfmSW->wingID]);
+				}
+ 
+				m_pMissionInfo->GetSideInfo(pship->GetSide()->GetObjectID())->GetMembers().GetSink()();
+			}
         }
         break;
 
