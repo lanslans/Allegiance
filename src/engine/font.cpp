@@ -215,7 +215,7 @@ private:
         //
 
         for (index = 0; index < 256; index++) {
-            ZAssert(m_data[index].m_size.X() >  0           );
+			// ZAssert(m_data[index].m_size.X() >	0			); // KG- Vista doesnt like this
             ZAssert(m_data[index].m_size.X() <  m_height * 4);
             ZAssert(m_data[index].m_size.Y() == m_height    );
         }
@@ -829,17 +829,17 @@ TRef<IEngineFont> CreateEngineFont(IBinaryReaderSite* psite)
 //
 //////////////////////////////////////////////////////////////////////////////
 
-ZString ConvertColorToString (const Color& color)
-{
-    char    buffer[9] = {0};
-    sprintf (buffer, "%02x%02x%02x%02x",
-        int (color.R () * 255.0f),
-        int (color.G () * 255.0f),
-        int (color.B () * 255.0f),
-        int (color.A () * 255.0f)
-    );
-    return ZString (buffer);
-}
+//ZString ConvertColorToString (const Color& color)
+//{
+//    char    buffer[9] = {0};
+//    sprintf (buffer, "%02x%02x%02x%02x",
+//        int (color.R () * 255.0f),
+//        int (color.G () * 255.0f),
+//        int (color.B () * 255.0f),
+//        int (color.A () * 255.0f)
+//    );
+//    return ZString (buffer);
+//}
 
 //////////////////////////////////////////////////////////////////////////////
 //

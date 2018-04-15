@@ -126,7 +126,7 @@ DamageResult    CstationIGC::ReceiveDamage(DamageTypeID            type,
         (m_myStationType.HasCapability(c_sabmPedestal)) ||
         (launcher && (amount >= 0.0f) &&
          (!GetMyMission()->GetMissionParams()->bAllowFriendlyFire) &&
-         (pside == launcher->GetSide())))
+         (IsideIGC::AlliedSides(pside,launcher->GetSide())))) //Andon: #Ally - Fixes Friendly Fire bug with stations
     {
         return c_drNoDamage;
     }
@@ -273,7 +273,6 @@ void                CstationIGC::SetBaseStationType(IstationTypeIGC*    pst)
 void                CstationIGC::AddShip(IshipIGC*    pship)
 {
     AddIbaseIGC((BaseListIGC*)&m_shipsDocked, pship);
-
     //At a station implies not in a cluster
     pship->SetCluster(NULL);
 }
@@ -292,67 +291,77 @@ const ShipListIGC*        CstationIGC::GetShips(void) const
 
 void CstationIGC::Launch(IshipIGC* pship)
 {
-    Orientation orientation;
-
-    Vector position;
-    position.x = random(-0.5f, 0.5f);
-    position.y = random(-0.5f, 0.5f);
-    position.z = random(-0.5f, 0.5f);
-
-    Vector  forward;
+	Orientation orientation;
+    Vector position(random(-0.5f, 0.5f), random(-0.5f, 0.5f), random(-0.5f, 0.5f));
+    Vector forward;
 
     const Orientation&  o = GetOrientation();
-    float   vLaunch = GetMyMission()->GetFloatConstant(c_fcidExitStationSpeed);
+    float   vLaunch = GetMyMission()->GetFloatConstant(c_fcidExitStationSpeed); //imago TODO use m_myLaunchSpeed - this will allow core devs to tweak
 
+	IclusterIGC*    pcluster = GetCluster();
     int nLaunchSlots = m_myStationType.GetLaunchSlots();
     if (nLaunchSlots == 0)
     {
-        switch (m_undockPosition++)
-        {
-            case 4:
+        if ((pship->GetPilotType() < c_ptPlayer) && m_myStationType.HasCapability(c_sabmRipcord)) { //imago 8/7/09
+            forward = Vector::RandomDirection();
+        } else { //do the regular thing
+            switch (m_undockPosition++)
             {
-                m_undockPosition = 0;
+                case 4:
+                {
+                    m_undockPosition = 0;
+                }
+                //No break
+                case 0:
+                {
+                    forward = o.GetRight();
+                }
+                break;
+                case 1:
+                {
+                    forward = o.GetUp();
+                }
+                break;
+                case 2:
+                {
+                    forward = -o.GetRight();
+                }
+                break;
+                case 3:
+                {
+                    forward = -o.GetUp();
+                }
+                break;
             }
-            //No break
-            case 0:
-            {
-                forward = o.GetRight();
-            }
-            break;
-            case 1:
-            {
-                forward = o.GetUp();
-            }
-            break;
-            case 2:
-            {
-                forward = -o.GetRight();
-            }
-            break;
-            case 3:
-            {
-                forward = -o.GetUp();
-            }
-            break;
         }
 
         position += forward * (GetRadius() + pship->GetRadius() + vLaunch * 0.5f);
     }
     else
-    {
+    { 
         position += m_myStationType.GetLaunchPosition(m_undockPosition) * o;
         forward = m_myStationType.GetLaunchDirection(m_undockPosition) * o;
 
-        position += forward * (pship->GetRadius() + vLaunch * 0.5f);
+		//Imago 6/10
+		Time    lastUpdate = pcluster->GetLastUpdate();
+		Time    lastLaunch = GetLastLaunch();
+		float	m_fDeltaTime = (float)(lastUpdate - lastLaunch);
+		//debugf(" *** %s(%i) launch time cluster delta = %f\n\n", m_myStationType.GetName(), m_myStationType.GetObjectID(), m_fDeltaTime);
+		if (m_fDeltaTime <= 0.1f) {
+			 position += forward * (pship->GetRadius() + vLaunch * 0.85f);
+			 //debugf("*** %s(%i) position adjusted to ensure smooth take-off\n",pship->GetName(),pship->GetObjectID());
+		} else {
+			 position += forward * (pship->GetRadius() + vLaunch * 0.5f);
+		}
+		//
 
         m_undockPosition = (m_undockPosition + 1) % nLaunchSlots;
     }
 
     orientation.Set(forward, o.GetForward());
 
-    IclusterIGC*    pcluster = GetCluster();
-    Time    lastUpdate = pcluster->GetLastUpdate();
 
+    
     pship->SetPosition(position + GetPosition());
     pship->SetOrientation(orientation);
     pship->SetVelocity(forward * vLaunch);
@@ -361,6 +370,8 @@ void CstationIGC::Launch(IshipIGC* pship)
     pship->SetCurrentTurnRate(c_axisRoll, 0.0f);
 
     pship->SetCluster(pcluster);
+	pship->SetLastTimeLaunched(Time::Now());
+	SetLastLaunch(Time::Now());
 }
 
 bool    CstationIGC::InGarage(IshipIGC* pship, const Vector& position)
@@ -527,6 +538,7 @@ const char*          MyStationType::GetModelName(void) const
     return m_pStationData->modelName;
 }
 
+
 const char*          MyStationType::GetName(void) const
 {
     return m_pStationData->name;
@@ -639,6 +651,11 @@ IstationTypeIGC*  MyStationType::GetSuccessorStationType(const IsideIGC*    psid
 {
     return m_pStationType->GetSuccessorStationType(pside);
 }
+// EF5P
+IstationTypeIGC*  MyStationType::GetDirectSuccessorStationType(void)
+{
+    return m_pStationType->GetDirectSuccessorStationType();
+}
 AsteroidAbilityBitMask   MyStationType::GetBuildAABM(void) const
 {
     return m_pStationData->aabmBuild;
@@ -740,4 +757,5 @@ IdroneTypeIGC*          MyStationType::GetConstructionDroneType(void) const
 {
     return m_pStationType->GetConstructionDroneType();
 }
+
 

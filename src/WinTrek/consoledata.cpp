@@ -821,7 +821,7 @@ float PartWrapper::IsSelected()
     else if (m_ppart->GetPartType()->GetEquipmentType() == ET_Weapon)
     {
         IweaponIGC* pweapon = (IweaponIGC*)(IpartIGC*)m_ppart;
-        bool fSelected;
+        bool fSelected = false;
 
         if (pweapon->GetMountID() < 0)
         {

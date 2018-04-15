@@ -95,14 +95,16 @@ HRESULT CprobeIGC::Initialize(ImissionIGC* pMission, Time now, const void* data,
 
         DataProbeTypeIGC*  dataProbeType = (DataProbeTypeIGC*)(m_probeType->GetData());
         m_projectileType = m_probeType->GetProjectileType();
-        if (m_projectileType)
-        {
-            m_projectileType->AddRef();
-            m_bSeenByAll = false;
+		if (m_projectileType)
+		{
+			m_projectileType->AddRef();
+			m_bSeenByAll = false;
 
-            if (pshipLauncher && (dataProbeType->launcherDef.price == 0))
-                m_launcher = pshipLauncher;
-        }
+			if (pshipLauncher && (dataProbeType->launcherDef.price == 0))
+				m_launcher = pshipLauncher;
+		}
+		else
+			m_launcher = pshipLauncher; //Xynth would still like to know who deployed the probe
 
         assert (pcluster);
 
@@ -151,7 +153,6 @@ HRESULT CprobeIGC::Initialize(ImissionIGC* pMission, Time now, const void* data,
         {
             pMission->GetIgcSite()->ActivateTeleportProbe(this);
         }
-
 		// mmf 04/08 destroy any probe near aleph (warp) tip as this is viewed as an exploit as the enemy 
 		//           often cannot delete it
 		// 
@@ -195,7 +196,6 @@ HRESULT CprobeIGC::Initialize(ImissionIGC* pMission, Time now, const void* data,
 
 		// mmf added code to detect tp drop near asteroid and if too close destroy it
 		//     leave ActivateTeleProbe code above so enemy is alerted to the drop even though it may be destroyed
-		// 
 		if (dataProbeType->dtRipcord >= 0.0f)  // check to see if this is a teleprobe
 		{
 			Vector dV;
@@ -266,7 +266,7 @@ inline void CprobeIGC::ValidTarget(ImodelIGC*  pmodel,
                         Vector*              pdirectionMin)
 {
     //to something that does not include observers, then the check can be removed.
-    if (pmodel->GetSide() != pside)
+	if ((pmodel->GetSide() != pside) && !IsideIGC::AlliedSides(pside,pmodel->GetSide())) //#ALLY -was: if (pmodel->GetSide() != pside)  imago fixed 7/8/09
     {
         ModelAttributes ma = pmodel->GetAttributes();
 
@@ -333,7 +333,7 @@ inline void  CprobeIGC::GetTarget(const ModelListIGC*  models,
                                
 void    CprobeIGC::Update(Time now)
 {
-    if (now >= m_timeExpire)
+    if (now >= m_timeExpire)	
         GetMyMission()->GetIgcSite()->KillProbeEvent(this);
     else
     {
@@ -443,7 +443,7 @@ void    CprobeIGC::Update(Time now)
                                 //Does this side have any scanners in the sector?
                                 ClusterSite*    pcs = pcluster->GetClusterSite();
                                 const ScannerListIGC*   psl = pcs->GetScanners(psideOther->GetObjectID());
-                                if (psl->n() != 0)
+                                if ((psl->n() != 0) || (m_pMission->GetMissionParams()->bAllowAlliedViz && psideOther->AlliedSides(psideOther,pside))) //ALLY 7/3/09 VISIBILITY 7/11/09 imago
                                     SetSideVisibility(psideOther, true);
                                 else
                                     m_bSeenByAll = false;
@@ -533,6 +533,7 @@ int                 CprobeIGC::Export(void*    data) const
 
         pdme->clusterID = GetCluster()->GetObjectID();
         pdme->probetypeID = m_probeType->GetObjectID();
+
         pdme->sideID = GetSide()->GetObjectID();
         pdme->shipID = m_launcher ? m_launcher->GetObjectID() : NA;
 

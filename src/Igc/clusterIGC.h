@@ -233,6 +233,7 @@ class       CclusterIGC : public IclusterIGC
 
             AddModel(asteroidNew);
         }
+
         virtual void                    DeleteAsteroid(IasteroidIGC* asteroidOld)
         {
             DeleteModel(asteroidOld);
@@ -246,6 +247,25 @@ class       CclusterIGC : public IclusterIGC
         {
             return &m_asteroids;
         }
+		//Xynth #132 New function to get known He3 in a cluster for a side
+		virtual float                   GetHeliumSeen(IsideIGC* pside)
+		{
+			float fOre = 0.0;
+			for (AsteroidLinkIGC* asteriodLink = this->GetAsteroids()->first();
+            asteriodLink != NULL; asteriodLink = asteriodLink->next())
+			{
+				AsteroidAbilityBitMask aabm = asteriodLink->data()->GetCapabilities();
+
+				// if we can mine helium at this asteroid
+				if ((aabm & c_aabmMineHe3) != 0)
+				{
+					// count it.								
+					fOre += asteriodLink->data()->GetOreSeenBySide(pside);
+				}
+			}
+
+			return fOre;
+		}
 
         virtual ClusterSite*            GetClusterSite(void) const
         {
@@ -450,6 +470,73 @@ class       CclusterIGC : public IclusterIGC
             return m_fCost;
         }
 
+		//Xynth #208
+		virtual void			SetHighlight(bool hl)
+		{
+			m_highlight = hl;
+		}
+
+		virtual bool			GetHighlight() const
+		{
+			return m_highlight;
+		}
+
+		//Imago 8/10 #121 #120 (adapted from common)
+		virtual bool bSimpleEye(float RangeA, ImodelIGC* pmodelA, float Sig, float SigMod, float Radius, Vector pos) {
+			float   m = RangeA * Sig * pmodelA->GetSide()->GetGlobalAttributeSet().GetAttribute(c_gaScanRange);
+             m /= SigMod;
+			float   r = pmodelA->GetRadius() + Radius + m;
+			const Vector&   P1 = pmodelA->GetPosition();
+			const Vector&   P2 = pos;
+
+			Vector          V12 = P2 - P1;
+			float           fLengthSquaredV12 = V12.LengthSquared (),
+							fOverLengthV12 = 1.0f / sqrtf (fLengthSquaredV12);
+			V12 *= fOverLengthV12;
+
+			float           fVisibleAngle = asinf (Radius * fOverLengthV12);
+
+			for (ModelLinkIGC* pml = ((ModelListIGC*)(GetAsteroids()))->first(); (pml != NULL); pml = pml->next())
+			{
+				ImodelIGC*  pmodel = pml->data();
+				if (P1 != P2)
+				{
+					const Vector&   P3 = pmodel->GetPosition();
+
+					Vector          V13 = P3 - P1;
+					float           fLengthSquaredV13 = V13.LengthSquared ();
+
+					if (fLengthSquaredV13 < fLengthSquaredV12)
+					{
+						float   dot = (V12 * V13);
+						if (dot > 0.0f)
+						{
+
+							float   fOverLengthV13 = 1.0f / sqrtf (fLengthSquaredV13);
+							float   fCosineSeparationAngle = dot * fOverLengthV13;
+
+							{
+
+								float   fRadius3 = pmodel->GetRadius () * 0.5f;
+								float   fCoveredAngle = asinf (fRadius3 * fOverLengthV13);
+
+								float   fSeparationAngle = acosf (fCosineSeparationAngle);
+								float   fMaximumSeparationAngle = fSeparationAngle + fVisibleAngle;
+
+								if (fMaximumSeparationAngle < fCoveredAngle) {
+									return false;
+								}
+							}
+						}
+					}
+				}
+			}
+			float t1 = (pmodelA->GetPosition() - pos).LengthSquared();
+			float t2 = r * r;
+			return (t1 <= t2);
+		}
+		// End Imago #121 #120 8/10
+
     private:
         ImissionIGC*        m_pMission;
         DWORD               m_dwPrivate; // private data for consumer
@@ -481,6 +568,8 @@ class       CclusterIGC : public IclusterIGC
         int                 m_nExplosions;
 
         int                 m_nPass;
+
+		bool				m_highlight;  //Xynth #208 Highlight in minimap
 };
 
 #endif //__CLUSTERIGC_H_

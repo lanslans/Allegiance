@@ -1380,8 +1380,12 @@ public:
 
                     case CHAT_WING:
                     {
+						int wid = trekClient.GetShip()->GetWingID();
+						if (wid < 0)
+							 wid = 0;
+
                         pszRecipient = c_pszWingName[m_pchsCurrent->m_oidRecipient == NA
-                                                     ? trekClient.GetShip()->GetWingID()
+                                                     ? wid
                                                      : m_pchsCurrent->m_oidRecipient];
                     }
                     break;

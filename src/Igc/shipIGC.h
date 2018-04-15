@@ -92,6 +92,7 @@ class       MyHullType : public IhullTypeIGC
         virtual bool                 HasCapability(HullAbilityBitMask habm) const;
 
         virtual const Vector&        GetCockpit(void) const;
+		virtual const Vector&		 GetChaffPosition(void) const; // TurkeyXIII 11/09 #94
 
         virtual const Vector&        GetWeaponPosition(Mount mount) const;
         virtual const Orientation&   GetWeaponOrientation(Mount mount) const;
@@ -174,7 +175,6 @@ class       CshipIGC : public TmodelIGC<IshipIGC>
             return TmodelIGC<IshipIGC>::Release();
         }
         */
-
     public:
     // IbaseIGC
         virtual HRESULT             Initialize(ImissionIGC* pMission, Time now, const void* data, int length);
@@ -204,6 +204,9 @@ class       CshipIGC : public TmodelIGC<IshipIGC>
                 assert (GetSide() != NULL);
 
                 SetRipcordModel(NULL);
+
+				//Xynth #47 7/2010  Reset rip indicator
+				SetStateBits(droneRipMaskIGC, 0);
 
                 if (cluster != pclusterOld)
                 {
@@ -310,6 +313,20 @@ class       CshipIGC : public TmodelIGC<IshipIGC>
                 m_fractionLastOrder = newVal;
             GetThingSite ()->RemoveDamage (m_fraction);
         }
+		
+		//Xynth #156 7/2010
+		virtual void				SetOre(float newOre)
+		{
+			m_fOre = newOre;
+		}
+
+		virtual float				GetOreCapacity() const
+		{			
+			float minerCapacity;
+			minerCapacity = GetMyMission()->GetFloatConstant(c_fcidCapacityHe3) *
+                            GetSide()->GetGlobalAttributeSet().GetAttribute(c_gaMiningCapacity);
+			return minerCapacity;
+		}
 
         virtual float               GetHitPoints(void) const
         {
@@ -418,7 +435,7 @@ class       CshipIGC : public TmodelIGC<IshipIGC>
                         if (pafter)
                             pafter->Deactivate();   //The station is a no smoking area
 
-                        if ((m_fOre > 0.0f) && (s->GetStationType()->HasCapability(c_sabmUnload)))
+                        if ((m_fOre > 0.0f) && (s->GetStationType()->HasCapability(c_sabmUnload) && (GetSide() == s->GetSide()))) //#ALLY: Only offload at your own bases (TheRock)
                         {
                             IsideIGC*   pside = GetSide();
 
@@ -561,6 +578,12 @@ class       CshipIGC : public TmodelIGC<IshipIGC>
         {
             return m_cockpit;
         }
+
+		// TurkeyXIII 11/09 #94
+		virtual const Vector&		GetChaffPosition(void) const
+		{
+			return m_chaff;
+		}
 
         virtual short                 GetAmmo(void) const
         {
@@ -1079,7 +1102,7 @@ class       CshipIGC : public TmodelIGC<IshipIGC>
             return bComplete;
         }
 
-        virtual void                ExportFractions(CompactShipFractions* pfractions) const
+        virtual void                ExportFractions(CompactShipFractions* pfractions)  const
         {
             pfractions->SetHullFraction(m_fraction);
             {                                                                   
@@ -1089,6 +1112,7 @@ class       CshipIGC : public TmodelIGC<IshipIGC>
             pfractions->SetFuel(m_myHullType.GetMaxFuel(), m_fuel);  
             pfractions->SetAmmo(m_myHullType.GetMaxAmmo(), m_ammo);   
             pfractions->SetEnergy(m_myHullType.GetMaxEnergy(), m_energy);
+			pfractions->SetOre(GetOreCapacity(), m_fOre);  //Xynth #156 7/2010
         }
 
 
@@ -1110,7 +1134,8 @@ class       CshipIGC : public TmodelIGC<IshipIGC>
                         }                                                                               \
                         pshipupdate->fractions.SetFuel(m_myHullType.GetMaxFuel(), m_fuel);              \
                         pshipupdate->fractions.SetAmmo(m_myHullType.GetMaxAmmo(), m_ammo);              \
-                        pshipupdate->fractions.SetEnergy(m_myHullType.GetMaxEnergy(), m_energy);
+                        pshipupdate->fractions.SetEnergy(m_myHullType.GetMaxEnergy(), m_energy);		\
+						pshipupdate->fractions.SetOre(GetOreCapacity(), m_fOre);  //Xynth #156 7/2010
 
         virtual void                ExportShipUpdate(ServerLightShipUpdate*     pshipupdate) const
         {
@@ -1337,6 +1362,25 @@ class       CshipIGC : public TmodelIGC<IshipIGC>
                 pmissile->AddRef();
         }
 
+		//Imago 6/10 #7
+        virtual void                   SetLastTimeLaunched(Time timeLastLaunch)
+        {
+           m_lastLaunch = timeLastLaunch;
+        }
+        virtual Time                  GetLastTimeLaunched(void) const
+        {
+            return m_lastLaunch;
+        }
+        virtual void                   SetLastTimeDocked(Time timeLastDock)
+        {
+           m_lastDock = timeLastDock;
+        }
+        virtual Time                  GetLastTimeDocked(void) const
+        {
+            return m_lastDock;
+        }
+		//
+
         virtual void                Promote(void);
 
         virtual void                SetParentShip(IshipIGC* pship);
@@ -1443,13 +1487,17 @@ class       CshipIGC : public TmodelIGC<IshipIGC>
             IpartIGC*   part = GetMyMission()->CreatePart(GetMyLastUpdate(), ppt);
             assert (part);
 
-            part->SetShip(this, mount);
-            assert (part->GetShip() == this);
-            assert (part->GetMountID() == mount);
+			// Xynth -"Fix to avoid crash 8963864" 
+			if (part)
+			{
+				part->SetShip(this, mount);
+				assert(part->GetShip() == this);
+				assert(part->GetMountID() == mount);
 
-            part->SetAmount(amount);
+				part->SetAmount(amount);
 
-            part->Release();
+				part->Release();
+			}
 
             return part;        //Bad form to return after a release but it is not dead since the ship holds a pointer
         }
@@ -1560,7 +1608,7 @@ class       CshipIGC : public TmodelIGC<IshipIGC>
             else
             {
                 ObjectType  type = pmodel->GetObjectType();
-                bool        bFriendly = pmodel->GetSide() == GetSide();
+				bool        bFriendly = ((pmodel->GetSide() == GetSide()) || IsideIGC::AlliedSides(pmodel->GetSide(), GetSide())); // #ALLY IMAGO 7/8/09
 
                 switch (cid)
                 {
@@ -1791,11 +1839,39 @@ class       CshipIGC : public TmodelIGC<IshipIGC>
         {
             m_ripcordDebt += delta;
         }
-
+		//Xynth #48 8/2010
+		virtual void				SetStayDocked(bool stayDock)
+		{
+			m_stayDocked = stayDock;
+		}
+		virtual bool				GetStayDocked(void) const
+		{
+			return m_stayDocked;
+		}
+		virtual void AddRepair(float repair)
+		{
+			m_repair += repair; //Xynth amount of nanning performed by ship
+		}
+		virtual float GetRepair(void) const
+		{
+			return m_repair;
+		}
+		virtual void				SetAchievementMask(AchievementMask am)
+		{
+			m_achievementMask = m_achievementMask | am;
+		}
+		virtual void				ClearAchievementMask(void)
+		{
+			m_achievementMask = 0;
+		}
+		virtual AchievementMask		GetAchievementMask(void) const
+		{
+			return m_achievementMask;
+		}
         virtual bool                OkToLaunch(Time now)
         {
             //Spend 10 seconds docked (MyLastUpdate is not being updated while docked)
-            if (now > GetMyLastUpdate() + 10.0f)
+            if ((now > GetMyLastUpdate() + 10.0f) && !m_stayDocked) //Xynth #48 8/10 add staydocked bool
             {
                 IclusterIGC*    pcluster   = m_station->GetCluster();
                 const Vector&   positionMe = m_station->GetPosition();
@@ -1817,7 +1893,7 @@ class       CshipIGC : public TmodelIGC<IshipIGC>
                         {
                             IsideIGC*   pside = pship->GetSide();
 
-                            if (pside == psideMe)
+                            if (pside == psideMe || pside->AlliedSides(psideMe,pside)) //#ALLY - imago 7/3/09
                             {
                                 cFriend++;
                                 float d2 = (positionMe - pship->GetPosition()).LengthSquared();
@@ -1978,7 +2054,7 @@ class       CshipIGC : public TmodelIGC<IshipIGC>
                 case c_ptPlayer:
                 case c_ptCheatPlayer:
                 {
-                    if (psideHim == GetSide())
+                    if ((psideHim == GetSide()) || GetSide()->AlliedSides(GetSide(),psideHim)) //ALLY imago 7/9/09
                     {
                         cid = c_cidDefend;
                         if (m_pshipParent == NULL)
@@ -2282,6 +2358,7 @@ class       CshipIGC : public TmodelIGC<IshipIGC>
         TRef<IbaseIGC>      m_pbaseData;
 
         Vector              m_cockpit;
+		Vector				m_chaff; 				// TurkeyXIII 11/09 #94
 
         GotoPlan            m_gotoplan;
 
@@ -2331,10 +2408,13 @@ class       CshipIGC : public TmodelIGC<IshipIGC>
 
         ImissileIGC*        m_pmissileLast;
 
+		Time				m_lastLaunch; //Imago #7 7/10
+		Time				m_lastDock; //Imago #7 7/10
+
         ImodelIGC*          m_commandTargets[c_cmdMax];
 
         float               m_dtTimeBetweenComplaints;
-        float               m_fOre;
+        float               m_fOre;		
         AbilityBitMask      m_abmOrders;
 
         WingID              m_wingID;
@@ -2351,6 +2431,11 @@ class       CshipIGC : public TmodelIGC<IshipIGC>
         bool                m_bAutopilot;
         bool                m_bRunningAway;
         WarningMask         m_warningMask;
+
+		bool				m_stayDocked;  //Xynth #48 8/10
+		float				m_repair; //Xynth amount of nanning performed by ship
+		AchievementMask		m_achievementMask;
+
 };
 
 #endif //__SHIPIGC_H_

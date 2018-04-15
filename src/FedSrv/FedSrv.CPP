@@ -3200,6 +3200,7 @@ void HandleCOMChatEvents(const char *szMessage, const char *szDest, ShipID shipi
     "LEADERS",               // CHAT_LEADERS             in igc.h
     "ADMIN",                 // CHAT_ADMIN               in igc.h
     "SHIP",                  // CHAT_SHIP                in igc.h
+	"ALLIES",                // CHAT_ALLIES              in igc.h Imago 7/4/09 ALLY
     "TEAM",                  // CHAT_TEAM                in igc.h
     "INDIVIDUAL",            // CHAT_INDIVIDUAL          in igc.h
     "INDIVIDUAL_NOFILTER"    // CHAT_INDIVIDUAL_NOFILTER in igc.h
@@ -7483,7 +7484,7 @@ IHTTPSession * BeginConfigDownload()
   ZString strBuild(vi.GetFileBuildNumber());
 
   char szConfig[MAX_PATH];
-  lstrcpy(szConfig, "http://Allegiance.zone.com/Allegiance.cfg");
+  lstrcpy(szConfig, "http://allegiance.zaphop.com/allegiance.txt");
 
   CRegKey key;
   if (ERROR_SUCCESS == key.Open(HKEY_LOCAL_MACHINE, HKLM_FedSrv, KEY_READ))

@@ -16,7 +16,7 @@ BOOL RegConfigReader::DeleteItem(const char *pszItem)
     HKEY hkey;
     BOOL fRet = FALSE;
 
-    if (RegOpenKeyEx(HKEY_LOCAL_MACHINE, m_szKey, 0, KEY_READ | KEY_SET_VALUE, &hkey) == ERROR_SUCCESS)
+    if (RegOpenKeyEx(HKEY_CURRENT_USER, m_szKey, 0, KEY_READ | KEY_SET_VALUE, &hkey) == ERROR_SUCCESS)
     {
         if (RegDeleteValue (hkey, pszItem) == ERROR_SUCCESS)
         {

@@ -458,11 +458,15 @@ private:
             // if they are on our team, draw the player's wing
             if (pplayer->SideID() == trekClient.GetSideID() && !bOnLobbySide)
             {
+				int wid = pplayer->GetShip()->GetWingID();
+				if (wid < 0)
+					 wid = 0;
+
                 psurface->DrawString(
                     TrekResources::SmallFont(),
                     color,
                     WinPoint(m_viColumns[4] + 2, 0), 
-                    c_pszWingName[pplayer->GetShip()->GetWingID()]
+                    c_pszWingName[wid]
                 );
             }
         }
@@ -1482,7 +1486,7 @@ public:
             && m_sideCurrent != trekClient.GetSideID());
 
 		m_pbuttonStart->SetHidden(false);
-        //m_pbuttonStart->SetHidden(!trekClient.MyPlayerInfo()->IsMissionOwner());
+        m_pbuttonStart->SetHidden(!trekClient.MyPlayerInfo()->IsMissionOwner());
     }
 
     void UpdateTitleText()
@@ -1691,8 +1695,8 @@ public:
                 {
                     m_ptextStatus->SetString("READY TO START");
                     m_ptextStatus2->SetString("");
-					bool autoStart = m_pMission->GetMissionParams().bAutoStart;
-					debugf("auto start: %i\n", autoStart == true ? 1 : 0);
+					/*bool autoStart = m_pMission->GetMissionParams().bAutoStart;
+					debugf("auto start: %i\n", autoStart == true ? 1 : 0);*/
                     m_pbuttonStart->SetEnabled(!m_pMission->GetMissionParams().bAutoStart);
                 }
                 else

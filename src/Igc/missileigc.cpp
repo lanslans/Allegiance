@@ -429,8 +429,23 @@ void                 CmissileIGC::HandleCollision(Time       timeCollision,
     if (!m_bDisarmed)
     {
         ObjectType  ot = pModel->GetObjectType();
+		// KGJV - experimental
+		if (GetMyMission()->GetMissionParams()->bExperimental)
+		{
+			// ignore minefields except those with c_eabmShootMissiles capability
+			if (ot == OT_mine)
+			{
+				ImineIGC*    pmine = (ImineIGC*)pModel;
+				if(!pmine->GetMineType()->HasCapability(c_eabmShootMissiles)) 
+					return;             //Ignore collisions with minefields
+				if ((GetSide()==pModel->GetSide()) || IsideIGC::AlliedSides(GetSide(),pModel->GetSide())) // #ALLY -was: GetSide()==pModel->GetSide() imago fixed 7/8/09
+					return;             // ignore if same side
+			}
+		} // experimental
+		else
+		// original code here
         if (ot == OT_mine)
-            return;             //Ignore collisions with minefields
+			return;             //Ignore collisions with minefields
 
         IIgcSite*   pigc = GetMyMission()->GetIgcSite();
         Vector position1;
@@ -476,13 +491,18 @@ void                 CmissileIGC::HandleCollision(Time       timeCollision,
                                 (!pstation->GetStationType()->HasCapability(c_sabmPedestal)) &&
                                 (pstation->GetShieldFraction() < GetMyMission()->GetFloatConstant(c_fcidDownedShield)))
                             {
-                                pigc->CaptureStationEvent(m_launcher, pstation);
+                                if ((GetSide()!=pModel->GetSide()) || IsideIGC::AlliedSides(GetSide(),pModel->GetSide()))
+								  pigc->CaptureStationEvent(m_launcher, pstation); // Andon: Fix nerve gas self-capture bug 7/10
                             }
                         }
                     }
                 }
             }
-            else
+            else if (m_launcher->GetObjectID() == ((ImissileIGC*)pModel)->GetLauncher()->GetObjectID())
+			{
+				return;
+			}
+			else
             {
                 //Missiles hitting missiles are a special case: both die without calling either's receive damage method.
                 //Create explosions for both missiles

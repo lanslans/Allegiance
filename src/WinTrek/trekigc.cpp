@@ -17,7 +17,7 @@
 #include "regkey.h"
 #include <zreg.h>
 #include "badwords.h"
-
+#include "..\Inc\nullptr_emulation.h"
 class ClusterSiteImpl : public ClusterSite
 {
     public:
@@ -2282,7 +2282,7 @@ WinTrekClient::WinTrekClient(void)
 
     HKEY hKey;
 
-    if (ERROR_SUCCESS == ::RegCreateKeyEx(HKEY_LOCAL_MACHINE, 
+    if (ERROR_SUCCESS == ::RegCreateKeyEx(HKEY_CURRENT_USER,
         ALLEGIANCE_REGISTRY_KEY_ROOT,
         0, "", REG_OPTION_NON_VOLATILE, KEY_READ, NULL, &hKey, NULL))
     {
@@ -2873,7 +2873,7 @@ ZString WinTrekClient::GetSavedCharacterName()
     char szName[c_cbName];
     szName[0] = '\0';
     
-    if (ERROR_SUCCESS == RegOpenKeyEx(HKEY_LOCAL_MACHINE, ALLEGIANCE_REGISTRY_KEY_ROOT, 0, KEY_READ, &hKey)) 
+    if (ERROR_SUCCESS == RegOpenKeyEx(HKEY_CURRENT_USER, ALLEGIANCE_REGISTRY_KEY_ROOT, 0, KEY_READ, &hKey))
     {
         RegQueryValueEx(hKey, "CharacterName", NULL, &dwType, (unsigned char*)&szName, &cbName);
         RegCloseKey(hKey);
@@ -2889,7 +2889,7 @@ void WinTrekClient::SaveCharacterName(ZString strName)
     char szName[c_cbName];
     szName[0] = '\0';
     
-    if (ERROR_SUCCESS == RegOpenKeyEx(HKEY_LOCAL_MACHINE, ALLEGIANCE_REGISTRY_KEY_ROOT, 0, KEY_WRITE, &hKey)) 
+    if (ERROR_SUCCESS == RegOpenKeyEx(HKEY_CURRENT_USER, ALLEGIANCE_REGISTRY_KEY_ROOT, 0, KEY_WRITE, &hKey))
     {
         RegSetValueEx(hKey, "CharacterName", NULL, REG_SZ, 
             (const BYTE*)(const char*)strName, strName.GetLength() + 1);
@@ -4120,7 +4120,7 @@ void      WinTrekClient::ReceiveChat(IshipIGC*   pshipSender,
         Training::RecordChat (ctRecipient);
     }
 
-    bool    bForMe;
+    bool    bForMe = false;
 
     ZString     strSender;
     ZString     strRecipient;
@@ -4174,16 +4174,20 @@ void      WinTrekClient::ReceiveChat(IshipIGC*   pshipSender,
             case CHAT_TEAM:
             {
                 IsideIGC*   pside = trekClient.GetShip()->GetSide();
-                if ((oidRecipient == NA) || (oidRecipient == pside->GetObjectID()))
-                {
-                    strRecipient = pside->GetName();
-                    bForMe = true;
-                }
-                else
-                {
-                    strRecipient = trekClient.m_pCoreIGC->GetSide(oidRecipient)->GetName();
-                    bForMe = false;
-                }
+
+				if (pside != nullptr)
+				{
+					if ((oidRecipient == NA) || (oidRecipient == pside->GetObjectID()))
+					{
+						strRecipient = pside->GetName();
+						bForMe = true;
+					}
+					else
+					{
+						strRecipient = trekClient.m_pCoreIGC->GetSide(oidRecipient)->GetName();
+						bForMe = false;
+					}
+				}
             }
             break;
 
@@ -4233,6 +4237,9 @@ void      WinTrekClient::ReceiveChat(IshipIGC*   pshipSender,
                     bForMe = false;
                 }
 
+				if (wid < 0)
+					wid = 0;
+
                 strRecipient = c_pszWingName[wid];
             }
             break;
@@ -4253,11 +4260,15 @@ void      WinTrekClient::ReceiveChat(IshipIGC*   pshipSender,
                 else
                 {
                     pshipRecipient = trekClient.m_pCoreIGC->GetShip(oidRecipient);
-                    strRecipient = pshipRecipient->GetName();
-                    bForMe = false;
 
-                    if ((cid == c_cidDefault) && pmodelTarget)
-                        cid = pshipRecipient->GetDefaultOrder(pmodelTarget);
+					if (pshipRecipient != nullptr)
+					{
+						strRecipient = pshipRecipient->GetName();
+						bForMe = false;
+
+						if ((cid == c_cidDefault) && pmodelTarget)
+							cid = pshipRecipient->GetDefaultOrder(pmodelTarget);
+					}
                 }
             }
             break;
@@ -4458,7 +4469,7 @@ void WinTrekClient::SetCDKey(const ZString& strCDKey)
     //
     // save the new key for future use.
 	//
-    // if (ERROR_SUCCESS == ::RegCreateKeyEx(HKEY_LOCAL_MACHINE, 
+    // if (ERROR_SUCCESS == ::RegCreateKeyEx(HKEY_CURRENT_USER, 
     //    ALLEGIANCE_REGISTRY_KEY_ROOT,
     //    0, "", REG_OPTION_NON_VOLATILE, KEY_WRITE, NULL, &hKey, NULL))
     // {
@@ -4853,6 +4864,7 @@ void WinTrekClient::OnQuitMission(QuitSideReason reason, const char* szMessagePa
 			assert(szMessageParam);
 			strMessage = ZString(szMessageParam);
 			break;
+
         case QSR_SwitchingSides:
         case QSR_RandomizeSides:
             assert(false); // shouldn't get booted off the mission for this
@@ -4981,7 +4993,7 @@ void  WinTrekClient::SaveSquadMemberships(const char* szCharacterName)
 
     HKEY hKey;
 
-    if (ERROR_SUCCESS == ::RegCreateKeyEx(HKEY_LOCAL_MACHINE, 
+    if (ERROR_SUCCESS == ::RegCreateKeyEx(HKEY_CURRENT_USER,
         ALLEGIANCE_REGISTRY_KEY_ROOT "\\SquadMemberships",
         0, "", REG_OPTION_NON_VOLATILE, KEY_WRITE, NULL, &hKey, NULL))
     {
@@ -4997,7 +5009,7 @@ void  WinTrekClient::RestoreSquadMemberships(const char* szCharacterName)
 
     HKEY hKey;
 
-    if (ERROR_SUCCESS == ::RegCreateKeyEx(HKEY_LOCAL_MACHINE, 
+    if (ERROR_SUCCESS == ::RegCreateKeyEx(HKEY_CURRENT_USER,
         ALLEGIANCE_REGISTRY_KEY_ROOT "\\SquadMemberships",
         0, "", REG_OPTION_NON_VOLATILE, KEY_READ, NULL, &hKey, NULL))
     {

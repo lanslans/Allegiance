@@ -182,8 +182,12 @@ xcopy $(ProjectDir)..\Inc\steam_appid.txt $(OutDir) /s /d /y</Command>
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <TargetMachine>MachineX86</TargetMachine>
+
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
+
+      <RandomizedBaseAddress />
+
     </Link>
     <CustomBuildStep>
       <Command>regsvr32 $(TargetPath) /s</Command>

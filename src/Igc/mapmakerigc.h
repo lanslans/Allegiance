@@ -22,7 +22,7 @@ typedef  Slink_utl<ImapMakerIGC*>       MapMakerLinkIGC;
 // Constants currently being used.
 //
 const int c_MaxClustersPerMap = 50;
-const int c_NumClusterNames = 69;
+const int c_NumClusterNames = 70;
 const int c_NumberOfPlanetPosters = 25;
 
 const int c_FriendlyAleph = 0;          // Friend to Friend
@@ -249,6 +249,7 @@ class CmapMakerIGC : public ImapMakerIGC
         virtual VOID        PopulateClusters(CMapData * pMapData);
 
         virtual VOID        RevealHomeClusters(ImissionIGC * pMission);
+		virtual VOID        RevealAlliedClusters(ImissionIGC * pMission); //imago ally visibility 7/11/09
         virtual VOID        RevealMap(ImissionIGC * pMission);
         virtual VOID        ActivateSides(ImissionIGC * pMission);
 } ;
