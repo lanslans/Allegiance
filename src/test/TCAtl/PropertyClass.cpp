@@ -178,7 +178,7 @@ void TCComPropertyClassRoot::SetSaving(bool bSaving)
 //
 // See Also: TCComPropertyClass, *ATL::IPersistStreamInitImpl* „
 HRESULT TCComPropertyClassRoot::TCPersistStreamInit_Load(LPSTREAM pStm,
-  ATL_PROPMAP_ENTRY* pMap, void* pThis, IUnknown* pUnk)
+  const ATL_PROPMAP_ENTRY* pMap, void* pThis, IUnknown* pUnk)
 {
   // Enter the Loading mode for this scope
   CLoadSaveScope loading(this);
@@ -276,7 +276,7 @@ HRESULT TCComPropertyClassRoot::TCPersistStreamInit_Load(LPSTREAM pStm,
 //
 // See Also: TCComPropertyClass, *ATL::IPersistStreamInitImpl* „
 HRESULT TCComPropertyClassRoot::TCPersistStreamInit_Save(LPSTREAM pStm,
-  BOOL fClearDirty, ATL_PROPMAP_ENTRY* pMap, void* pThis, IUnknown* pUnk)
+  BOOL fClearDirty, const ATL_PROPMAP_ENTRY* pMap, void* pThis, IUnknown* pUnk)
 {
   // Enter the Saving mode for this scope
   CLoadSaveScope saving(this, false);
@@ -383,7 +383,7 @@ HRESULT TCComPropertyClassRoot::TCPersistStreamInit_Save(LPSTREAM pStm,
 //
 // See Also: TCComPropertyClass, *ATL::IPersistPropertyBagImpl* „
 HRESULT TCComPropertyClassRoot::TCPersistPropertyBag_Load(
-  LPPROPERTYBAG pPropBag, LPERRORLOG pErrorLog, ATL_PROPMAP_ENTRY* pMap,
+  LPPROPERTYBAG pPropBag, LPERRORLOG pErrorLog, const ATL_PROPMAP_ENTRY* pMap,
   void* pThis, IUnknown* pUnk)
 {
   // Enter the Loading mode for this scope
@@ -572,7 +572,7 @@ HRESULT TCComPropertyClassRoot::TCPersistPropertyBag_Load(
 // See Also: TCComPropertyClass, *ATL::IPersistPropertyBagImpl* „
 HRESULT TCComPropertyClassRoot::TCPersistPropertyBag_Save(
   LPPROPERTYBAG pPropBag, BOOL fClearDirty, BOOL fSaveAllProperties,
-  ATL_PROPMAP_ENTRY* pMap, void* pThis, IUnknown* pUnk)
+  const ATL_PROPMAP_ENTRY* pMap, void* pThis, IUnknown* pUnk)
 {
   // Do nothing if saving only the dirty properties and there are none
   if (!fSaveAllProperties && !GetDirty())

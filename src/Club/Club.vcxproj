@@ -22,18 +22,18 @@
     <ProjectGuid>{4B0BFF91-D476-4317-BA7C-B052052FBD7D}</ProjectGuid>
     <RootNamespace>Club</RootNamespace>
     <Keyword>Win32Proj</Keyword>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='FZRetail|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v80</PlatformToolset>
+    <PlatformToolset>v141_xp</PlatformToolset>
     <UseOfMfc>false</UseOfMfc>
     <UseOfAtl>Dynamic</UseOfAtl>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='FZDebug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v80</PlatformToolset>
+    <PlatformToolset>v141_xp</PlatformToolset>
     <UseOfMfc>false</UseOfMfc>
     <UseOfAtl>Dynamic</UseOfAtl>
   </PropertyGroup>
@@ -83,20 +83,20 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='FZDebug|Win32'">
     <OutDir>.\..\..\objs\$(Configuration)\Club\</OutDir>
     <IntDir>.\..\..\objs\$(Configuration)\Club\</IntDir>
-    <IncludePath>C:\Program Files (x86)\Microsoft DirectX SDK (August 2007)\Include;C:\Program Files (x86)\Microsoft SDKs\Windows\v5.0\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Program Files (x86)\Microsoft DirectX SDK (August 2007)\Lib\x86;C:\Program Files (x86)\Microsoft SDKs\Windows\v5.0\Lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include;C:\Program Files (x86)\Microsoft DirectX SDK (August 2007)\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Lib;C:\Program Files (x86)\Microsoft DirectX SDK (August 2007)\Lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='FZRetail|Win32'">
     <OutDir>.\..\..\objs\$(Configuration)\Club\</OutDir>
     <IntDir>.\..\..\objs\$(Configuration)\Club\</IntDir>
-    <IncludePath>C:\Program Files (x86)\Microsoft DirectX SDK (August 2007)\Include;C:\Program Files (x86)\Microsoft SDKs\Windows\v5.0\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Program Files (x86)\Microsoft DirectX SDK (August 2007)\Lib\x86;C:\Program Files (x86)\Microsoft SDKs\Windows\v5.0\Lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include;C:\Program Files (x86)\Microsoft DirectX SDK (August 2007)\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Lib;C:\Program Files (x86)\Microsoft DirectX SDK (August 2007)\Lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>..\ZLib;..\_Utility;..\Inc;..\Guids;..\Zone;..\Test\Inc;..\..\FreeZoneAuth;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>ALLCLUB;_WIN32_WINNT=0x0400;_ATL_STATIC_REGISTRY;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>ALLCLUB;_WIN32_WINNT=0x0A00;_ATL_STATIC_REGISTRY;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
@@ -121,7 +121,7 @@
       <InlineFunctionExpansion>Default</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <AdditionalIncludeDirectories>..\ZLib;..\_Utility;..\Inc;..\Guids;..\Zone;..\Test\Inc;..\..\FreeZoneAuth;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>ALLCLUB;_WIN32_WINNT=0x0400;_ATL_STATIC_REGISTRY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>ALLCLUB;_WIN32_WINNT=0x0A00;_ATL_STATIC_REGISTRY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <BufferSecurityCheck>true</BufferSecurityCheck>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
@@ -140,7 +140,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>..\ZLib;..\_Utility;..\Inc;..\Guids;..\Zone;..\Test\Inc;..\..\FreeZoneAuth;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>ALLCLUB;_WIN32_WINNT=0x0400;_ATL_STATIC_REGISTRY;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>ALLCLUB;_WIN32_WINNT=0x0A00;_ATL_STATIC_REGISTRY;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ExceptionHandling />
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -163,7 +163,7 @@
     <ClCompile>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <AdditionalIncludeDirectories>..\ZLib;..\_Utility;..\Inc;..\Guids;..\Zone;..\Test\Inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>ALLCLUB;_WIN32_WINNT=0x0400;_ATL_STATIC_REGISTRY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>ALLCLUB;_WIN32_WINNT=0x0A00;_ATL_STATIC_REGISTRY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <PrecompiledHeader />

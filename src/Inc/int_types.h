@@ -33,9 +33,9 @@ _CRTIMP __checkReturn unsigned long __cdecl strtoul(__in_z const char * _Str, __
 //	char ** endptr,
 //	int base);
 
-unsigned long long int strtoull(const char* str,
-	char** endptr,
-	int base);
+//unsigned long long int strtoull(const char* str,
+//	char** endptr,
+//	int base);
 
 //BBT placed here for convenience
 //unsigned long long strtoull(const char * ptr,

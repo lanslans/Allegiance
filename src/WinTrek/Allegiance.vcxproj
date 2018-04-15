@@ -22,17 +22,17 @@
     <ProjectGuid>{3702DB5A-C966-4133-824F-5958F4BF9BCF}</ProjectGuid>
     <RootNamespace>Allegiance</RootNamespace>
     <Keyword>MakeFileProj</Keyword>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='FZRetail|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v80</PlatformToolset>
+    <PlatformToolset>v141_xp</PlatformToolset>
     <UseOfMfc>false</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='FZDebug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v80</PlatformToolset>
+    <PlatformToolset>v141_xp</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Retail|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -80,15 +80,15 @@
     <OutDir>.\..\..\objs\$(Configuration)\WinTrek\</OutDir>
     <IntDir>.\..\..\objs\$(Configuration)\WinTrek\</IntDir>
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Program Files (x86)\Microsoft DirectX SDK (August 2007)\Include;C:\Program Files (x86)\Microsoft SDKs\Windows\v5.0\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Program Files (x86)\Microsoft DirectX SDK (August 2007)\Lib\x86;C:\Program Files (x86)\Microsoft SDKs\Windows\v5.0\Lib;C:\Program Files (x86)\Windows Kits\8.1\Lib\winv6.3\um\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include;C:\Program Files (x86)\Microsoft DirectX SDK (August 2007)\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Lib;C:\Program Files (x86)\Microsoft DirectX SDK (August 2007)\Lib\x86;C:\Program Files (x86)\Windows Kits\8.1\Lib\winv6.3\um\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='FZRetail|Win32'">
     <OutDir>.\..\..\objs\$(Configuration)\Wintrek\</OutDir>
     <IntDir>.\..\..\objs\$(Configuration)\Wintrek\</IntDir>
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>C:\Program Files (x86)\Microsoft DirectX SDK (August 2007)\Include;C:\Program Files (x86)\Microsoft SDKs\Windows\v5.0\Include;C:\Program Files (x86)\Windows Kits\8.1\Include\um;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Program Files (x86)\Microsoft DirectX SDK (August 2007)\Lib\x86;C:\Program Files (x86)\Microsoft SDKs\Windows\v5.0\Lib;C:\Program Files (x86)\Windows Kits\8.1\Lib\winv6.3\um\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include;C:\Program Files (x86)\Microsoft DirectX SDK (August 2007)\Include;C:\Program Files (x86)\Windows Kits\8.1\Include\um;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Lib;C:\Program Files (x86)\Microsoft DirectX SDK (August 2007)\Lib\x86;C:\Program Files (x86)\Windows Kits\8.1\Lib\winv6.3\um\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
