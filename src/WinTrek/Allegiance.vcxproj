@@ -88,7 +88,7 @@
     <IntDir>.\..\..\objs\$(Configuration)\Wintrek\</IntDir>
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>C:\Program Files (x86)\Microsoft DirectX SDK (August 2007)\Include;C:\Program Files (x86)\Microsoft SDKs\Windows\v5.0\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Program Files (x86)\Microsoft DirectX SDK (August 2007)\Lib\x86;C:\Program Files (x86)\Microsoft SDKs\Windows\v5.0\Lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>C:\Program Files (x86)\Microsoft DirectX SDK (August 2007)\Lib\x86;C:\Program Files (x86)\Microsoft SDKs\Windows\v5.0\Lib;C:\Program Files (x86)\Windows Kits\8.1\Lib\winv6.3\um\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -195,7 +195,7 @@ xcopy $(ProjectDir)..\lib\FreeImage\FreeImage.dll $(OutDir) /s /d /y</Command>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='FZRetail|Win32'">
     <ClCompile>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <AdditionalIncludeDirectories>..\Lib\Steam;..\Lib\AllegianceSecurity;..\Effect;..\Engine;..\ZLib;..\_Utility;..\Igc;..\clintlib;..\SoundEngine;..\agc;..\FedSrv;..\Training;..\lobby;..\Inc;..\guids;..\Zone;$(OutDir)..\AGC;$(OutDir)..\FedSrv;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Lib\Steam;..\Lib\AllegianceSecurity;..\Effect;..\Engine;..\ZLib;..\_Utility;..\Igc;..\clintlib;..\SoundEngine;..\agc;..\FedSrv;..\Training;..\lobby;..\Inc;..\guids;..\Zone;$(OutDir)..\AGC;$(OutDir)..\FedSrv;$(OutDir)..\Guids;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>STEAM_APP_ID=700480;STEAMSECURE;WINTREK;igc_static;IGC_SHIP;_USRDLL;DLL;DIRECTINPUT_VERSION=0x0700;_WINDOWS;WIN32;AFXDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <BufferSecurityCheck>true</BufferSecurityCheck>
@@ -212,7 +212,7 @@ xcopy $(ProjectDir)..\lib\FreeImage\FreeImage.dll $(OutDir) /s /d /y</Command>
       <AdditionalIncludeDirectories>..\Inc;..\Lang\NonIntl\allegiance;..\Lang\USA\allegiance;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>..\Lib\AllegianceSecurity\AllegianceSecurity.lib;..\Lib\Steam\steam_api.lib;atls.lib;ddraw.lib;dsound.lib;dinput.lib;$(OutDir)..\zlib\zlib.lib;$(OutDir)..\soundengine\soundengine.lib;$(OutDir)..\_utility\Utility.lib;$(OutDir)..\engine\Engine.lib;$(OutDir)..\effect\Effect.lib;$(OutDir)..\igc\igc.lib;$(OutDir)..\clintlib\clintlib.lib;$(OutDir)..\agc\AGCGuid.lib;$(OutDir)..\Guids\guids.lib;$(OutDir)..\training\training.lib;urlmon.lib;dxguid.lib;winmm.lib;amstrmid.lib;comctl32.lib;version.lib;ws2_32.lib;delayimp.lib;wininet.lib;lz32.lib;netapi32.lib;comsupp.lib;oledb.lib;..\Engine\FreeImage\FreeImage.lib;%(AdditionalDependencies);dbghelp.lib</AdditionalDependencies>
+      <AdditionalDependencies>..\Lib\AllegianceSecurity\AllegianceSecurity.lib;..\Lib\Steam\steam_api.lib;atls.lib;ddraw.lib;dsound.lib;dinput.lib;$(OutDir)..\zlib\zlib.lib;$(OutDir)..\soundengine\soundengine.lib;$(OutDir)..\_utility\Utility.lib;$(OutDir)..\engine\Engine.lib;$(OutDir)..\effect\Effect.lib;$(OutDir)..\igc\igc.lib;$(OutDir)..\clintlib\clintlib.lib;$(OutDir)..\Guids\AGCGuid.lib;$(OutDir)..\Guids\guids.lib;$(OutDir)..\training\training.lib;urlmon.lib;dxguid.lib;winmm.lib;amstrmid.lib;comctl32.lib;version.lib;ws2_32.lib;delayimp.lib;wininet.lib;lz32.lib;netapi32.lib;comsupp.lib;oledb.lib;..\Engine\FreeImage\FreeImage.lib;%(AdditionalDependencies);dbghelp.lib</AdditionalDependencies>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <StripPrivateSymbols />
       <GenerateMapFile>true</GenerateMapFile>
