@@ -34,6 +34,7 @@ const int   c_maskQueued        = c_maskOrder << c_cmdQueued;
 const int   c_maskEnemy         = 0x08;
 const int   c_maskThreat        = 0x10;
 const int   c_maskFlash         = 0x20;
+const int   c_maskRip		    = 0x40; //Xynth #171 8/10
 const int   c_maskMe            = 0x80;
 const int   c_maskSubject       = 0x100;
 const int   c_maskFlag          = 0x200;
@@ -120,6 +121,7 @@ class RadarImageImpl : public RadarImage {
     TRef<Surface>       m_psurfaceSubject;
     TRef<Surface>       m_psurfaceFlag;
     TRef<Surface>       m_psurfaceArtifact;
+	TRef<Surface>       m_psurfaceRip;  //Xynth #171 8/10
 
     TRef<Surface>       m_psurfaceTechIcon;
 
@@ -205,6 +207,7 @@ public:
         m_psurfaceSubject     = pmodeler->LoadSurface(AWF_FLIGHT_SUBJECT_ICON, true);
         m_psurfaceFlag        = pmodeler->LoadSurface(AWF_FLIGHT_FLAG_ICON, true);
         m_psurfaceArtifact    = pmodeler->LoadSurface(AWF_FLIGHT_ARTIFACT_ICON, true);
+		m_psurfaceRip 		  = pmodeler->LoadSurface(AWF_FLIGHT_RIP_ICON, true);
 
         m_psurfaceTechIcon    = pmodeler->LoadSurface("icontechbmp", true);
 
@@ -322,6 +325,9 @@ public:
                 DrawExpandedBlip(pcontext, radiusBracket, m_psurfaceFlag, colorOther);
             else if (maskBrackets & c_maskArtifact)
                 DrawExpandedBlip(pcontext, radiusBracket, m_psurfaceArtifact, colorOther);
+
+			if (maskBrackets & c_maskRip)  //Xynth #171 8/10
+				DrawExpandedBlip(pcontext, radiusBracket, m_psurfaceRip, colorIcon);
 
             if (maskBrackets & c_maskTarget)
                 DrawExpandedBlip(pcontext, radiusBracket, m_psurfaceTargeted, colorOther);
@@ -948,14 +954,22 @@ public:
                                 // the information. We would have to add a new message type
                                 // for that to happen, so for now I'm just commenting it out and
                                 // moving on.
-                                /*
-                                if (pship->GetPilotType () == c_ptMiner)
+                                //Xynth #156 7/2010 Uncomment and add condition for only own team to see
+								if ((pship->GetPilotType () == c_ptMiner) && (pship->GetSide() == psideMine))
                                 {
                                     fill = pship->GetOre () / capacity;
                                     if (fill > 1.0f)
                                         fill = 1.0f;
                                 }
-                                */
+
+								//Xynth #47 7/2010
+								if (((pship->GetStateM() & droneRipMaskIGC) != 0) &&
+									 (pship->GetSide() == psideMine) &&
+									 (pship->GetPilotType() < c_ptPlayer))  //Xynth #175 7/2010
+								{
+									maskBrackets |= c_maskRip; //Xynth #171 8/10
+								}
+
                             }
                             break;
 
