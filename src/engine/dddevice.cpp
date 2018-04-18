@@ -218,7 +218,13 @@ WinPoint g_validModes[] =
     WinPoint(1024,  768),
     WinPoint(1280, 1024),
     WinPoint(1366, 768),
-	WinPoint(1600, 1200)
+	WinPoint(1400, 1050),
+	WinPoint(1440, 900),
+	WinPoint(1600, 1200),
+	WinPoint(1680, 1050),
+	WinPoint(1920, 1080),
+	WinPoint(1920, 1200),
+	WinPoint(2560, 1440)
 };
 
 const int g_countValidModes = sizeof(g_validModes) / sizeof(g_validModes[0]);
