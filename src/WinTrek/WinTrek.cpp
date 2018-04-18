@@ -7781,6 +7781,14 @@ public:
             //------------------------------------------------------------------------------
             // End interception for training missions
             //------------------------------------------------------------------------------
+		} else {
+
+			// //-Imago 7/13/09 we're not actually in a sector playing the game...
+			// this is the right time & place place to rest our CPU. We can also give it more of a break now.
+			if (!GetFullscreen())
+				Sleep(5);
+			else
+				Sleep(1);
         }
 
         //
