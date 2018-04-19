@@ -989,10 +989,11 @@ public:
         return true;
     }
     
-    bool OnWingCombo(int index)
-    {
-        trekClient.SetWing(index);
-        return true;                
+	bool OnWingCombo(int index)
+	{
+		trekClient.SaveWingAssignment(index); // kolie 6/10
+		trekClient.SetWing(index);
+		return true;
     }
     
     bool OnButtonBoot()
