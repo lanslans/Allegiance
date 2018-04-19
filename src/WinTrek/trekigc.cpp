@@ -2899,7 +2899,7 @@ void WinTrekClient::SaveCharacterName(ZString strName)
 int WinTrekClient::GetSavedWingAssignment() { // kolie 6/10
 	HKEY hKey;
 	DWORD dwType = REG_DWORD;
-	DWORD dwWing = 1; // Default Wing Assignment is attack
+	DWORD dwWing = 0; // Default Wing Assignment is Command
 	DWORD dwSize = sizeof(DWORD);
 	if (ERROR_SUCCESS == RegOpenKeyEx(HKEY_CURRENT_USER, ALLEGIANCE_REGISTRY_KEY_ROOT, 0, KEY_READ, &hKey))
 		{
