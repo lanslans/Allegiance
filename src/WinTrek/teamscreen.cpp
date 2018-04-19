@@ -458,15 +458,11 @@ private:
             // if they are on our team, draw the player's wing
             if (pplayer->SideID() == trekClient.GetSideID() && !bOnLobbySide)
             {
-				int wid = pplayer->GetShip()->GetWingID();
-				if (wid < 0)
-					 wid = 0;
-
-                psurface->DrawString(
+				    psurface->DrawString(
                     TrekResources::SmallFont(),
                     color,
                     WinPoint(m_viColumns[4] + 2, 0), 
-                    c_pszWingName[wid]
+						c_pszWingName[pplayer->GetShip()->GetWingID()]
                 );
             }
         }
@@ -2803,9 +2799,15 @@ public:
             BEGIN_PFM_CREATE(trekClient.m_fm, pfmSetTeamLeader, CS, SET_TEAM_LEADER)
             END_PFM_CREATE
             pfmSetTeamLeader->sideID = trekClient.GetSideID(); 
-            pfmSetTeamLeader->shipID = shipID; 
-        }
-        else
+			pfmSetTeamLeader->shipID = shipID;
+			
+				//Imago 6/10 #91 - server will only set command now
+				if (trekClient.GetShip()->GetWingID() != trekClient.GetSavedWingAssignment()) {// || (trekClient.GetShip()->GetWingID() != 0 || !trekClient.MyPlayerInfo()->IsTeamLeader()) ) {
+				trekClient.SetWing(trekClient.GetSavedWingAssignment());
+				
+			}
+		}
+		else
         {
             // button should be disabled in this case
             assert(false);

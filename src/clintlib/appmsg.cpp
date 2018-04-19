@@ -2112,28 +2112,30 @@ HRESULT BaseClient::HandleMsg(FEDMESSAGE* pfm,
 
         case FM_CS_SET_WINGID:
         {
-            CASTPFM(pfmSW, CS, SET_WINGID, pfm);
+			CASTPFM(pfmSW, CS, SET_WINGID, pfm);
 
-            IshipIGC*   pship = m_ship->GetSide()->GetShip(pfmSW->shipID);
-			if (pship != nullptr)
-			{
-				if ((pship != m_ship) || pfmSW->bCommanded)
-				{
-					pship->SetWingID(pfmSW->wingID);
-					if (pfmSW->bCommanded && (pship == m_ship))
-						PostText(true, "You have been assigned to wing %s", c_pszWingName[pfmSW->wingID]);
-				}
- 
-				m_pMissionInfo->GetSideInfo(pship->GetSide()->GetObjectID())->GetMembers().GetSink()();
+			IshipIGC*   pship = m_ship->GetSide()->GetShip(pfmSW->shipID);
+			//assert (pship);
+			if (!pship) {
+				break; //Imago 6/10
 			}
-        }
-        break;
 
-        case FM_S_JOINED_MISSION:
-        {
-            CASTPFM(pfmJoinedMission, S, JOINED_MISSION, pfm);
+			if ((pship != m_ship) || pfmSW->bCommanded)
+			{
+				pship->SetWingID(pfmSW->wingID);
+				if (pfmSW->bCommanded && (pship == m_ship))
+					PostText(true, "You have been assigned to wing %s", c_pszWingName[pfmSW->wingID]);
+			}
 
-            assert(m_pMissionInfo != NULL);
+			m_pMissionInfo->GetSideInfo(pship->GetSide()->GetObjectID())->GetMembers().GetSink()();
+		}
+		break;
+
+		case FM_S_JOINED_MISSION:
+		{
+			CASTPFM(pfmJoinedMission, S, JOINED_MISSION, pfm);
+
+			assert(m_pMissionInfo != NULL);
 
             // make sure this was what we intended to join if we were joining from the lobby
             assert(m_dwCookieToJoin == pfmJoinedMission->dwCookie || !m_fmLobby.IsConnected());
