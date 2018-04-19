@@ -1102,6 +1102,8 @@ BaseClient::BaseClient(void)
     m_szLobbyCharName[0] = '\0';
     m_szIGCStaticFile[0] = '\0';
     m_pMissionInfo = NULL;
+
+    m_customLoadouts = new CachedLoadoutList[MAX_CUSTOM_LOADOUTS]; //AaronMoore 1/10
 }
 
 BaseClient::~BaseClient(void)
@@ -1137,6 +1139,11 @@ BaseClient::~BaseClient(void)
     if (m_vStaticMapInfo)
         delete [] m_vStaticMapInfo;
     m_vStaticMapInfo = NULL;
+	
+	//AaronMoore 1/10
+    if (m_customLoadouts)
+        delete [] m_customLoadouts;
+    m_customLoadouts = NULL;
 }
 
 void    BaseClient::Initialize(Time timeNow)
