@@ -1792,10 +1792,12 @@ private:
 
                     UINT scan   = ::MapVirtualKey(map.m_vk, 0) << 16;
 
+#pragma warning(disable:4293)
                     if (scan & (1 << 32)) {
                         scan |= (1 << 24);
                         scan &= ~(1 << 23);
                     }
+#pragma warning(default:4293)
 
                     int length = 0;
 
