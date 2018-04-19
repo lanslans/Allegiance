@@ -404,6 +404,17 @@ public:
 
         pmodeler->UnloadNameSpace(pns);
 
+		//Imago set AFK #117 7/10
+		if (trekClient.MyPlayerInfo()->IsTeamLeader() && trekClient.GetPlayerInfo()->IsReady())
+		{
+			trekClient.GetPlayerInfo()->SetReady(false);
+			trekClient.SetMessageType(BaseClient::c_mtGuaranteed);
+			BEGIN_PFM_CREATE(trekClient.m_fm, pfmReady, CS, PLAYER_READY)
+			END_PFM_CREATE
+			pfmReady->fReady = false;
+			pfmReady->shipID = trekClient.GetShipID();
+		}
+
         OnGameoverStats();
         OnGameoverPlayers();
     } 

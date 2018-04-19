@@ -2143,8 +2143,17 @@ public:
     }
 
     void OnTeamCivChange(MissionInfo *pMissionDef, SideID sideID, CivID civID)
-    {
-        UpdateCivBitmap();
+	{
+		//Imago #114 7/10
+		if (trekClient.MyPlayerInfo()->IsTeamLeader() && !m_pbuttonAwayFromKeyboard->GetChecked() && trekClient.GetSideID() != sideID)
+		{
+			m_pbuttonTeamReady->SetChecked(false);
+			OnButtonTeamReady();
+			m_pbuttonAwayFromKeyboard->SetChecked(true);
+			OnButtonAwayFromKeyboard();
+		}
+			
+		UpdateCivBitmap();
 		m_plistPaneTeams->ForceRefresh(); // KGJV #62 fix: force faction names to refresh
     }
 
@@ -2522,6 +2531,12 @@ public:
             && m_pMission->SideActive(m_sideCurrent)
             )
         {
+			
+			//Imago 6/10 #91 - server will only set command now
+			if (trekClient.GetShip()->GetWingID() != trekClient.GetSavedWingAssignment()) {// || (trekClient.GetShip()->GetWingID() != 0 || !trekClient.MyPlayerInfo()->IsTeamLeader()) ) {
+				trekClient.SetWing(trekClient.GetSavedWingAssignment());
+			}
+
             // try to join the current side
             trekClient.SetMessageType(BaseClient::c_mtGuaranteed);
             BEGIN_PFM_CREATE(trekClient.m_fm, pfmPositionReq, C, POSITIONREQ)
