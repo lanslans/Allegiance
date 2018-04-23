@@ -366,6 +366,9 @@ xcopy $(ProjectDir)..\lib\FreeImage\FreeImage.dll $(OutDir) /s /d /y</Command>
       <Project>{281f3ac6-fad1-40f4-b798-f634a6162d39}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
+    <ProjectReference Include="..\Vorbis\Vorbis.vcxproj">
+      <Project>{d4369894-f7ef-4937-91c5-5d4c67a29ef9}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\zlib\ZLibrary.vcxproj">
       <Project>{21c70ca0-24c5-475b-8c47-6f0226a374b0}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>

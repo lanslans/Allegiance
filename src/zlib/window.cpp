@@ -852,6 +852,7 @@ DWORD Window::WndProc(
             }
             break;
 
+#define WM_MOUSEWHEEL                   0x020A
 #define WM_XBUTTONDOWN                  0x020B
 #define WM_XBUTTONUP                    0x020C
 
