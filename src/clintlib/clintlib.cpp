@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "..\Inc\nullptr_emulation.h" //BBT
+#include "..\Inc\nullptr_emulation.h"
 ALLOC_MSG_LIST;
 
 bool g_bCheckFiles = false;

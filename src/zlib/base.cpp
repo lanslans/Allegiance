@@ -1,7 +1,7 @@
 #include "pch.h"
 //#include <cstdint>				  
-#include "..\Inc\nullptr_emulation.h" //BBT
-#include "..\Inc\int_types.h" //BBT
+#include "..\Inc\nullptr_emulation.h"
+#include "..\Inc\int_types.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 //
