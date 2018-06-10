@@ -11291,6 +11291,7 @@ void FedSrvSiteBase::StationTypeCompleted(IbucketIGC * pbucket, IstationIGC* pst
         pfsDrone->GetIGCShip()->SetStation(NULL);       //but quickly undock them
 
         //Don't auto-build
+        /* - LANS - no longer need this after the fix in PickDefaultOrder, see shipIGC.h:2398
         if (pfsDrone->GetIGCShip()->GetCommandID(c_cmdCurrent) == c_cidBuild) {
             ImodelIGC* targetRock = pfsDrone->GetIGCShip()->GetCommandTarget(c_cmdCurrent);
             // Queue doing nothing
@@ -11299,6 +11300,7 @@ void FedSrvSiteBase::StationTypeCompleted(IbucketIGC * pbucket, IstationIGC* pst
             pfsDrone->GetIGCShip()->SetCommand(c_cmdPlan, targetRock, c_cidGoto);
             pfsDrone->GetIGCShip()->SetCommand(c_cmdCurrent, targetRock, c_cidGoto);
         }
+        */
 
         // request a rock.
         SendChat(pfsDrone->GetIGCShip(), CHAT_TEAM, pfsDrone->GetIGCShip()->GetSide()->GetObjectID(),
