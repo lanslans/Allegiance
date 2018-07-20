@@ -481,6 +481,10 @@ public:
         bool bStartOffline    = false;
         bool bMovies          = true;
         bool bSingleInstance  = true;
+        bool bSoftware        = false;
+        bool bHardware        = false;
+        bool bPrimary         = false;
+        bool bSecondary       = false;
 		bool bStartFullscreen = true;
 
 
@@ -499,6 +503,14 @@ public:
                     bStartTraining = true;
                     bLogonDialog = false;
                     bMovies = false;
+                } else if (str == "software") {
+                    bSoftware = true;
+                } else if (str == "hardware") {
+                    bHardware = true;
+                } else if (str == "primary") {
+                    bPrimary = true;
+                } else if (str == "secondary") {
+                    bSecondary = true;
                 } else if (str == "nooutput") {
                     //todo, change logging based on this
                 } else if (str == "quickstart") {
@@ -650,8 +662,24 @@ public:
                 this, 
                 strCommandLine,
 				pathStr,
-                bMovies
+                bMovies,
+                bSoftware,
+                bHardware,
+                bPrimary,
+                bSecondary
             );
+// #else
+        //TRef<TrekWindow> pwindow = 
+        //    TrekWindow::Create(
+        //        this, 
+        //        strCommandLine,
+        //        bMovies,
+        //        bSoftware,
+        //        bHardware,
+        //        bPrimary,
+        //        bSecondary
+        //    );
+// BUILD_DX9
 
         if (!pwindow->IsValid()) {
             return E_FAIL;
