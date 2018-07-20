@@ -2387,9 +2387,9 @@ class       CshipIGC : public TmodelIGC<IshipIGC>
 
                     ImodelIGC*  pmodel = FindTarget(this,
                                                     c_ttNeutral | c_ttAsteroid | c_ttNearest |
-                                                    c_ttLeastTargeted | c_ttCowardly,
+                                                    c_ttLeastTargeted | c_ttAnyCluster | c_ttCowardly,
                                                     NULL, pcluster, &position, NULL,
-                                                    m_abmOrders); //Removed c_ttAnyCluster, this should fix tech cons moving out of sector unwanted - LANS
+                                                    m_abmOrders);
 
                     if (pmodel)
                     {
