@@ -2395,18 +2395,16 @@ class       CshipIGC : public TmodelIGC<IshipIGC>
                     {
                         assert (m_pbaseData);
 
-                        CommandID   cid = c_cidGoto; //(m_abmOrders != c_aabmBuildable) ? c_cidBuild : c_cidGoto; - LANS
+                        CommandID   cid = (m_abmOrders != c_aabmBuildable) ? c_cidBuild : c_cidGoto;
 
                         SetCommand(c_cmdAccepted, pmodel, cid);
                         fGaveOrder = true;
-                       /* if (cid == c_cidBuild)
+                        if (cid == c_cidBuild)
                             GetMyMission()->GetIgcSite()->SendChatf(this, CHAT_TEAM, GetSide()->GetObjectID(),
                                                                     droneInTransitSound,
                                                                     "Building %s at %s",
                                                                     ((IstationTypeIGC*)(IbaseIGC*)m_pbaseData)->GetName(),
                                                                     GetModelName(pmodel));
-                                                                    */ 
-                                                                    // - LANS: these changes make cons not wander out of sector until ordered
                     }
                 }
                 break;
